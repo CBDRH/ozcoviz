@@ -1,0 +1,105 @@
+---
+title: "Covid19 data"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(covidrecon)
+library(tidyverse)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r pull-data}
+covid <- covid_latest()
+```
+
+```{r center-covid-from-100}
+selected_countries <- c("China",
+                        "Singapore",
+                        "Japan",
+                        "Iran",
+                        "Italy",
+                        "Spain",
+                        "US",
+                        "United_Kingdom",
+                        "Australia",
+                        "France",
+                        "South_Korea")
+```
+
+```{r covid-filter}
+covid_subset <- covid %>% 
+  filter(country_region %in% c(selected_countries, 
+                               "United_States_of_America", 
+                               "Germany", 
+                               "Denmark"))
+```
+
+
+```{r covid-changepoint}
+covid_changepoint <- covid_subset %>% 
+  add_covid_change_point() %>% 
+  filter(date >= change_point_date)
+```
+
+
+Cumulative 
+=======================================================================
+
+### Cumulative Incidence
+
+```{r gg-covid-cumulative}
+gg_covid_cumulative_exceed_limit(covid,
+                                 selected_countries = selected_countries)
+```
+
+Instant Effective Reproduction (facetted)
+=======================================================================
+
+### Instant Effective Reproduction (facetted)
+
+```{r covid-instant-repro}
+covid_instant_r <- add_instant_reproduction(covid_changepoint)
+```
+
+```{r gg-effective-r-facet}
+gg_effective_repro_facet(covid_instant_r)
+```
+
+Instant Effective Reproduction
+=======================================================================
+
+### Instant Effective Reproduction
+
+```{r gg-effective-repro-all}
+
+gg_effective_repro_all(covid_instant_r)
+
+```
+
+Case Doubling
+=======================================================================
+
+```{r gg-case-doubling}
+
+```
+
+
+About
+=======================================================================
+
+These graphics are licensed with a CC BY-NC-SA License
+Users must provide personal and institutional acknowledgement on reuse
+
+Analysis used includes ...
+
+Packages used ...
+
+In turn, we acknowledge RECON, and EuroCDC
+
+Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
+

@@ -66,8 +66,8 @@ Instant Effective Reproduction (facetted)
 covid_instant_r <- add_instant_reproduction(covid_changepoint)
 ```
 
-```{r gg-effective-r-facet}
-gg_effective_repro_facet(covid_instant_r)
+```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
+gg_effective_repro_facet(covid_instant_r) 
 ```
 
 Instant Effective Reproduction
@@ -75,7 +75,7 @@ Instant Effective Reproduction
 
 ### Instant Effective Reproduction
 
-```{r gg-effective-repro-all}
+```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
 
 gg_effective_repro_all(covid_instant_r)
 

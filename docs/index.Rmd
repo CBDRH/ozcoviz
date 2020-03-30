@@ -10,6 +10,7 @@ output:
 library(flexdashboard)
 library(covidrecon)
 library(tidyverse)
+library(vegawidget)
 knitr::opts_chunk$set(cache = FALSE)
 ```
 
@@ -63,10 +64,68 @@ covid_since_100_selected <- covid_since_100 %>%
   filter(country_region %in% selected_countries)
 ```
 
-```{r gg-cumulative-incidence}
+```{r gg-cumulative-incidence, eval = FALSE}
 gg_covid_cumulative_exceed_limit(covid_since_100_selected, 
                                  limit = 100)
 ```
+
+
+```{r vl-cumulative-incidence}
+vl_line_plot <- 
+  list(
+    data = list(values = covid_since_100_selected %>% 
+                  select(days_since_limit, cumulative_cases, country_region)
+    ),
+    mark = list(type = "line", tooltip = TRUE),
+    encoding = list(
+      x = list(field = "days_since_limit", 
+               type = "quantitative",
+               axis = list(title = "Days since cumulative cases exceeded 100")),
+      y = list(field = "cumulative_cases", 
+               type = "quantitative",
+               scale = list(type = "log"),
+               axis = list(title = "Cumulative cases (logarithmic scale)",
+                           tickCount = 5,
+                           tickExtra = FALSE)),
+      color = list(field = "country_region",
+                   type = "nominal",
+                   axis = list(title = "Country"),
+                   legend = NA)
+    )
+  )
+
+max_days_offset <- max(covid_since_100_selected$days_since_limit) + 10
+vl_text_repel <- 
+  list(
+    data = list(values = covid_since_100_selected %>% 
+                  group_by(geo_id) %>% 
+                  filter(date == last(date)) %>% 
+                  ungroup() %>% 
+                  select(days_since_limit, cumulative_cases, country_region)),
+    mark = list(type = "text", dx = 5, baseline = "middle",
+                align = "left", clip = TRUE),
+    encoding = list(
+      x = list(field = "days_since_limit", 
+               type = "quantitative",
+               scale = list(domain = list(0, max_days_offset))),
+      y = list(field = "cumulative_cases", type = "quantitative"),
+      color = list(field = "country_region", type = "nominal", legend = NA),
+      text = list(field = "country_region", type = "nominal")
+    )
+  )
+
+vl_covid_cumulative_exceed_limit <- 
+  list(
+    `$schema` = vega_schema(),
+    width = 600,
+    height = 400,
+    layer = list(vl_line_plot)
+  ) 
+
+vl_covid_cumulative_exceed_limit %>% 
+  as_vegaspec()
+```
+
 
 Instant Effective Reproduction {.tabset}
 =======================================================================

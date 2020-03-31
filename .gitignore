@@ -4,7 +4,7 @@
 .Ruserdata
 index_cache
 .covid_cache
-*_cache/
-*_files/
-*.html
+*/*_cache/
+*/*_files/
+*/*.html
 

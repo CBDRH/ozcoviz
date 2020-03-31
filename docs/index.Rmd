@@ -48,6 +48,9 @@ covid_changepoint <- covid %>%
   filter(date >= change_point_date)
 ```
 
+Home
+=======================================================================
+
 
 Cumulative 
 =======================================================================
@@ -94,13 +97,6 @@ gg_effective_repro_facet(covid_instant_r)  +
 ```
 
 
-Case Doubling
-=======================================================================
-
-```{r gg-case-doubling}
-
-```
-
 Explanation
 =======================================================================
 
@@ -108,17 +104,24 @@ Explanation
 Contributors
 =======================================================================
 
-Project has been led by [Timothy Churches](), [Nicholas Tierney](), with thanks to [Stuart Lee](), [Dianne Cook](), and [Miles McBain]()
+These graphics are licensed with a [CC BY-NC-SA License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 
-These graphics are licensed with a [CC BY-NC-SA License]()
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
 Users must provide personal and institutional acknowledgement on reuse
 
 In turn, we acknowledge RECON, and EuroCDC
+
+Project has been led by [Timothy Churches](), [Nicholas Tierney](), with thanks to [Stuart Lee](), [Dianne Cook](), and [Miles McBain]()
+
+
 
 Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
 
 Source code for this visualisation are available at [covid-flexdashboard](https://github.com/CBDRH/covid-flexdashboard)
 
+Technical Details
+=======================================================================
 
 Analysis used includes:
 

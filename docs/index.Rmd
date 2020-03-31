@@ -111,9 +111,14 @@ Users must provide personal and institutional acknowledgement on reuse
 
 Analysis used includes ...
 
-Packages used ...
+Packages used include:
+
+- tidyverse
+- 
 
 In turn, we acknowledge RECON, and EuroCDC
 
 Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
+
+Source code for this visualisation are available at [covid-flexdashboard](https://github.com/CBDRH/covid-flexdashboard)
 

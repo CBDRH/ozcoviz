@@ -53,7 +53,7 @@ Home
 =======================================================================
 
 
-Cases {.tabset}
+Cumulative {.tabset}
 =======================================================================
 
 Column  {.tabset}
@@ -73,6 +73,14 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
                                  limit = 100) + 
   ggthemes::scale_colour_colorblind()
 ```
+
+### Explanation
+
+Cases {.tabset}
+=======================================================================
+
+Column  {.tabset}
+-----------------------------------------------------------------------
 
 ### Oz Cases
 
@@ -103,8 +111,9 @@ ggplot(covid_since_100_au,
   
 ```
 
+### Explanation
 
-Instant Effective Reproduction {.tabset}
+IER {.tabset}
 =======================================================================
 
 Column  {.tabset}
@@ -123,6 +132,14 @@ gg_effective_repro_all(covid_instant_r) +
   ggthemes::scale_colour_colorblind()
 ```
 
+### Explanation
+
+IER (Per country) {.tabset}
+=======================================================================
+
+Column  {.tabset}
+-----------------------------------------------------------------------
+
 ### Per Country
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
@@ -130,11 +147,17 @@ gg_effective_repro_facet(covid_instant_r)  +
   ggthemes::scale_colour_colorblind()
 ```
 
+### Explanation
+
+IER (NSW) {.tabset}
+=======================================================================
+
+Column  {.tabset}
+-----------------------------------------------------------------------
+
 ### NSW
 
-
-Explanation
-=======================================================================
+### Explanation
 
 
 Contributors

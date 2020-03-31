@@ -11,42 +11,39 @@ output:
 library(flexdashboard)
 library(covidrecon)
 library(tidyverse)
+library(lubridate)
 knitr::opts_chunk$set(cache = FALSE)
 ```
 
-```{r pull-data}
-covid <- covid_latest()
-```
-
 ```{r center-covid-from-100}
-selected_countries <- c("China",
-                        "Singapore",
-                        "Japan",
-                        "Italy",
-                        "United_Kingdom",
+selected_countries <- c(
                         "Australia",
-                        "South_Korea",
-                        "United_States_of_America", 
-                        "Canada"
+                        "China",
+                        "Italy",
+                        "Singapore",
+                        "United_Kingdom",
+                        "United_States_of_America"
+                        )
+                        # "South_Korea",
+                        # "Canada",
+                        # "Germany", 
+                        # "Japan",
                         # "Iran",
                         # "Spain",
                         # "France",
-                        # "Germany", 
                         # "Denmark"
-                        )
 ```
 
-```{r covid-filter}
-covid_subset <- covid %>% 
-  filter(country_region %in% c(selected_countries, 
-                               "United_States_of_America", 
-                               "Germany", 
-                               "Denmark"))
+
+```{r pull-data}
+covid <- covid_latest() %>% 
+  filter(date < dmy("30-03-2020")) %>% 
+  filter(country_region %in% selected_countries) 
 ```
 
 
 ```{r covid-changepoint}
-covid_changepoint <- covid_subset %>% 
+covid_changepoint <- covid %>% 
   add_covid_change_point() %>% 
   filter(date >= change_point_date)
 ```
@@ -63,14 +60,11 @@ covid_since_100 <- covid %>%
   filter(days_since_limit >= 0)
 ```
 
-```{r filter}
-covid_since_100_selected <- covid_since_100 %>% 
-  filter(country_region %in% selected_countries)
-```
-
 ```{r gg-cumulative-incidence}
-gg_covid_cumulative_exceed_limit(covid_since_100_selected, 
-                                 limit = 100)
+
+gg_covid_cumulative_exceed_limit(covid_since_100,
+                                 limit = 100) + 
+  ggthemes::scale_colour_colorblind()
 ```
 
 Instant Effective Reproduction {.tabset}
@@ -88,13 +82,15 @@ covid_instant_r <- add_instant_reproduction(covid_changepoint)
 
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
-gg_effective_repro_all(covid_instant_r)
+gg_effective_repro_all(covid_instant_r) + 
+  ggthemes::scale_colour_colorblind()
 ```
 
 ### Per Country
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
-gg_effective_repro_facet(covid_instant_r) 
+gg_effective_repro_facet(covid_instant_r)  + 
+  ggthemes::scale_colour_colorblind()
 ```
 
 

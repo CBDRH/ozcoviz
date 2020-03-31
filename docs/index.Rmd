@@ -39,6 +39,7 @@ selected_countries <- c(
 covid <- covid_latest() %>% 
   filter(date < dmy("30-03-2020")) %>% 
   filter(country_region %in% selected_countries) 
+
 ```
 
 
@@ -52,8 +53,11 @@ Home
 =======================================================================
 
 
-Cumulative 
+Cases {.tabset}
 =======================================================================
+
+Column  {.tabset}
+-----------------------------------------------------------------------
 
 ### Cumulative Incidence
 
@@ -69,6 +73,36 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
                                  limit = 100) + 
   ggthemes::scale_colour_colorblind()
 ```
+
+### Oz Cases
+
+```{r oz-cases}
+library(glue)
+covid_since_100_au <- covid_since_100 %>% 
+  filter(geo_id == "AU") 
+  
+oz_cases_max_date <- format(max(covid_since_100_au$date), "%d %B %Y")
+oz_cases_min_date <- format(min(covid_since_100_au$date), "%d %B %Y")
+
+ggplot(covid_since_100_au,
+       aes(x = date,
+           y = cases)) + 
+  geom_col(fill = "black") + 
+  theme_minimal() +
+  labs(title = "COVID-19 epidemic case incidence",
+       subtitle = glue(
+         "For Australia from {oz_cases_min_date} to {oz_cases_max_date}"
+       ),
+       x = "Date since cumulative cases exceeded 100",
+       y = "Cases (Log scale)",
+       caption = "CC BY-NC-SA
+               Tim Churches (UNSW)
+               Nick Tierney (Monash)
+               Data source: European CDC") + 
+  scale_y_log10()
+  
+```
+
 
 Instant Effective Reproduction {.tabset}
 =======================================================================
@@ -95,6 +129,8 @@ gg_effective_repro_all(covid_instant_r) +
 gg_effective_repro_facet(covid_instant_r)  + 
   ggthemes::scale_colour_colorblind()
 ```
+
+### NSW
 
 
 Explanation

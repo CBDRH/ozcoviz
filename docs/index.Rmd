@@ -36,8 +36,10 @@ selected_countries <- c(
 
 
 ```{r pull-data}
+yesterday <- today() - 1L
+
 covid <- covid_latest() %>% 
-  filter(date < dmy("30-03-2020")) %>% 
+  filter(date < yesterday) %>% 
   filter(country_region %in% selected_countries) 
 
 ```

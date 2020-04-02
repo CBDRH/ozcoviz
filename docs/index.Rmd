@@ -22,15 +22,15 @@ selected_countries <- c(
                         "Italy",
                         "Singapore",
                         "United_Kingdom",
-                        "United_States_of_America"
-                        )
-                        # "South_Korea",
+                        "United_States_of_America",
+                        "South_Korea",
                         # "Canada",
                         # "Germany", 
-                        # "Japan",
+                        "Japan",
                         # "Iran",
-                        # "Spain",
-                        # "France",
+                        "Spain",
+                        "France"
+                        )
                         # "Denmark"
 ```
 
@@ -67,15 +67,16 @@ Column  {.tabset}
 covid_since_100 <- covid %>% 
   add_days_since_limit(limit = 100) %>% 
   filter(days_since_limit >= 0)
+
 ```
 
 ```{r gg-cumulative-incidence}
 
 gg_covid_cumulative_exceed_limit(covid_since_100,
                                  limit = 100) + 
-  ggthemes::scale_colour_colorblind() +
-  theme(panel.grid.minor = element_blank()) +
-  annotation_logticks(sides = "l") 
+  theme(panel.grid.minor = element_blank()) 
+  # ggthemes::scale_colour_colorblind() +
+  # annotation_logticks(sides = "l") 
 ```
 
 ### Explanation
@@ -122,7 +123,7 @@ gg_cases
 gg_cases +
    scale_y_log10() +
   theme(panel.grid.minor = element_blank()) +
-  annotation_logticks() + 
+  # annotation_logticks() + 
   labs(y = "New Cases (Log Scale")
   
 ```
@@ -146,8 +147,8 @@ covid_instant_r <- add_instant_reproduction(covid_changepoint)
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
 gg_effective_repro_all(covid_instant_r) + 
   ggthemes::scale_colour_colorblind() +
-  theme(panel.grid.minor = element_blank()) +
-  annotation_logticks() 
+  theme(panel.grid.minor = element_blank())
+  # annotation_logticks() 
 ```
 
 ### Explanation
@@ -163,8 +164,8 @@ Column  {.tabset}
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
 gg_effective_repro_facet(covid_instant_r)  + 
   ggthemes::scale_colour_colorblind() + 
-  theme(panel.grid.minor = element_blank()) +
-  annotation_logticks() 
+  theme(panel.grid.minor = element_blank())
+  # annotation_logticks() 
 ```
 
 ### Explanation

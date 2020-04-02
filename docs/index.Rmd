@@ -12,6 +12,8 @@ library(flexdashboard)
 library(covidrecon)
 library(tidyverse)
 library(lubridate)
+library(EpiEstim)
+
 knitr::opts_chunk$set(cache = FALSE)
 ```
 
@@ -22,15 +24,14 @@ selected_countries <- c(
                         "Italy",
                         "Singapore",
                         "United_Kingdom",
-                        "United_States_of_America"
-                        )
-                        # "South_Korea",
+                        "United_States_of_America",
+                        "South_Korea",
                         # "Canada",
-                        # "Germany", 
-                        # "Japan",
+                        "Germany", 
+                        "Japan",
                         # "Iran",
-                        # "Spain",
-                        # "France",
+                        "Spain",
+                        "France")
                         # "Denmark"
 ```
 
@@ -152,10 +153,177 @@ gg_effective_repro_facet(covid_instant_r)  +
 IER (NSW) {.tabset}
 =======================================================================
 
+```{r load-nsw-funcs, cache=FALSE}
+source("docs/get_nsw_data.R")
+source("docs/get_nishiura_si_sample.R")
+source("docs/plot_nsw_eff_r.R")
+```
+
+```{r get-nsw-data, cache=FALSE}
+nsw_incidence <- get_nsw_data()
+
+nsw_incidence_total <- nsw_incidence %>%
+  mutate(dates=notification_date,
+         I=OS + LC + LNC + UIX) %>%
+  select(dates, I)
+
+nsw_incidence_split_incl_uix <- nsw_incidence %>%
+  mutate(dates=notification_date,
+         imported=OS,
+         local= LC + LNC + UIX) %>%
+  select(dates, imported, local)
+
+nsw_incidence_split_excl_uix <- nsw_incidence %>%
+  mutate(dates=notification_date,
+         imported=OS,
+         local= LC + LNC) %>%
+  select(dates, imported, local)
+         
+```
+
+```{r get-si-sample, message=FALSE, include=FALSE, cache=FALSE}
+nishi_si_sample <- get_nishiura_si_sample()
+```
+
+```{r estimate-R-configs, cache=FALSE}
+# SI distribution from Nishiura et al.
+parametric_si_nishiura_config <- make_config(list(mean_si = 4.7,
+                                         std_si = 2.9))
+
+# values from https://www.nejm.org/doi/full/10.1056/NEJMoa2001316
+parametric_si_li_config <- make_config(list(mean_si = 7.5,
+                                         std_si = 3.4))
+
+# posterior sample based on Nishiura et al SI data
+si_from_sample_nishiura_config <-  make_config(list(n1=500, n2 = 50, seed=2))
+```
+
+
+```{r}
+nsw_effr_total_para_si <- estimate_R(nsw_incidence_total,
+                                     method="parametric_si",
+                                     config = parametric_si_li_config)
+```
+
+```{r}
+nsw_effr_total_si_from_sample <- estimate_R(nsw_incidence_total,
+                            method="si_from_sample",
+                            si_sample=nishi_si_sample,
+                            config = si_from_sample_nishiura_config)
+```
+
+```{r}
+nsw_effr_split_incl_uix_para_si <- estimate_R(nsw_incidence_split_incl_uix,
+                                      method="parametric_si",
+                                      config = parametric_si_li_config)
+```
+
+```{r}
+nsw_effr_split_incl_uix_si_from_sample <- estimate_R(nsw_incidence_split_incl_uix,
+                            method="si_from_sample",
+                            si_sample=nishi_si_sample,
+                            config = si_from_sample_nishiura_config)
+```
+
+```{r}
+nsw_effr_split_excl_uix_para_si <- estimate_R(nsw_incidence_split_excl_uix,
+                                      method="parametric_si",
+                                      config = parametric_si_li_config)
+```
+
+```{r}
+nsw_effr_split_excl_uix_si_from_sample <- estimate_R(nsw_incidence_split_excl_uix,
+                            method="si_from_sample",
+                            si_sample=nishi_si_sample,
+                            config = si_from_sample_nishiura_config)
+```
+
 Column  {.tabset}
 -----------------------------------------------------------------------
 
-### NSW
+### NSW - all data
+
+```{r}
+plots <- plot_Ri(parametric_si_obj=nsw_effr_total_para_si,
+                  si_from_sample_obj=nsw_effr_total_si_from_sample,
+                  title="All cases (local and imported)",
+                  subtitle="Parametric serial interval distribution from Li et al.")
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots$p_R_parametric_si
+plots$p_R_si_from_sample
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots$p_I
+plots$p_I
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots$p_SI_parametric_si
+plots$p_SI_si_from_sample
+```
+
+### NSW - local only incl under investigation
+
+```{r}
+plots_b <- plot_Ri(parametric_si_obj=nsw_effr_split_incl_uix_para_si,
+                 si_from_sample_obj=nsw_effr_split_incl_uix_si_from_sample,
+                 split=TRUE,
+                 title="All cases (local and imported)",
+                 subtitle="Parametric serial interval distribution from Li et al.")
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_b$p_R_parametric_si
+plots_b$p_R_si_from_sample
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_b$p_I_loc
+plots_b$p_I_loc
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_b$p_I_imp
+plots_b$p_I_imp
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_b$p_SI_parametric_si
+plots_b$p_SI_si_from_sample
+```
+
+### NSW - local only excl under investigation
+
+```{r}
+plots_c <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si,
+                 si_from_sample_obj=nsw_effr_split_excl_uix_si_from_sample,
+                 split=TRUE,
+                 title="All cases (local and imported)",
+                 subtitle="Parametric serial interval distribution from Li et al.")
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_c$p_R_parametric_si
+plots_c$p_R_si_from_sample
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_c$p_I_loc
+plots_c$p_I_loc
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_c$p_I_imp
+plots_c$p_I_imp
+```
+
+```{r, fig.width=6, fig.height=3, fig.hold="hold", out.width="50%"}
+plots_c$p_SI_parametric_si
+plots_c$p_SI_si_from_sample
+```
 
 ### Explanation
 

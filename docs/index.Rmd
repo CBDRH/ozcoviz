@@ -73,7 +73,9 @@ covid_since_100 <- covid %>%
 
 gg_covid_cumulative_exceed_limit(covid_since_100,
                                  limit = 100) + 
-  ggthemes::scale_colour_colorblind()
+  ggthemes::scale_colour_colorblind() +
+  theme(panel.grid.minor = element_blank()) +
+  annotation_logticks(sides = "l") 
 ```
 
 ### Explanation
@@ -94,7 +96,7 @@ covid_since_100_au <- covid_since_100 %>%
 oz_cases_max_date <- format(max(covid_since_100_au$date), "%d %B %Y")
 oz_cases_min_date <- format(min(covid_since_100_au$date), "%d %B %Y")
 
-ggplot(covid_since_100_au,
+gg_cases <- ggplot(covid_since_100_au,
        aes(x = date,
            y = cases)) + 
   geom_col(fill = "black") + 
@@ -104,12 +106,24 @@ ggplot(covid_since_100_au,
          "For Australia from {oz_cases_min_date} to {oz_cases_max_date}"
        ),
        x = "Date since cumulative cases exceeded 100",
-       y = "Cases (Log scale)",
+       y = "New Cases",
        caption = "CC BY-NC-SA
                Tim Churches (UNSW)
                Nick Tierney (Monash)
-               Data source: European CDC") + 
-  scale_y_log10()
+               Data source: European CDC")
+
+gg_cases
+  
+```
+
+### Oz Cases (log10)
+
+```{r oz-cases-log10}
+gg_cases +
+   scale_y_log10() +
+  theme(panel.grid.minor = element_blank()) +
+  annotation_logticks() + 
+  labs(y = "New Cases (Log Scale")
   
 ```
 
@@ -131,7 +145,9 @@ covid_instant_r <- add_instant_reproduction(covid_changepoint)
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
 gg_effective_repro_all(covid_instant_r) + 
-  ggthemes::scale_colour_colorblind()
+  ggthemes::scale_colour_colorblind() +
+  theme(panel.grid.minor = element_blank()) +
+  annotation_logticks() 
 ```
 
 ### Explanation
@@ -146,7 +162,9 @@ Column  {.tabset}
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
 gg_effective_repro_facet(covid_instant_r)  + 
-  ggthemes::scale_colour_colorblind()
+  ggthemes::scale_colour_colorblind() + 
+  theme(panel.grid.minor = element_blank()) +
+  annotation_logticks() 
 ```
 
 ### Explanation

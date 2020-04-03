@@ -57,6 +57,16 @@ covid_changepoint <- covid %>%
   filter(date >= change_point_date)
 ```
 
+```{r load-nsw-funcs, cache=FALSE}
+source("docs/get_nsw_data.R")
+source("docs/get_nishiura_si_sample.R")
+source("docs/plot_nsw_eff_r.R")
+```
+
+```{r prep-nsw-data-and-plots, cache=FALSE}
+source("docs/nsw_eff_R_data_and_plot_prep.R")
+```
+
 Home
 =======================================================================
 
@@ -201,12 +211,6 @@ gg_effective_repro_facet(covid_instant_r)  +
 Effective R (NSW) {.storyboard}
 =======================================================================
 
-```{r load-nsw-funcs, cache=FALSE}
-source("docs/get_nsw_data.R")
-source("docs/get_nishiura_si_sample.R")
-source("docs/plot_nsw_eff_r.R")
-source("docs/nsw_eff_R_data_and_plot_prep.R")
-```
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
 

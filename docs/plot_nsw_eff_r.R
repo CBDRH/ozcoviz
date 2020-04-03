@@ -20,7 +20,7 @@ extract_R_I_df <- function(estimate_R_obj) {
   return(R_df)
 }
 
-plot_eff_R <- function(R_df, title=NULL, subtitle=NULL) {
+plot_eff_R <- function(R_df) {
   p_R <- R_df %>%
          ggplot(aes(x=dates, y=median_R,
                     ymin=CI95_L_R,
@@ -29,17 +29,15 @@ plot_eff_R <- function(R_df, title=NULL, subtitle=NULL) {
          geom_line() +
          geom_ribbon(alpha=0.3) +
          scale_y_log10() +
-         labs(x="Date", y="Estimated effective R",
-              title=title,
-              subtitle=subtitle)
+         scale_x_date(date_labels = "%d %b") +
+         labs(x="End notification date of 7-day sliding window",
+              y=expression("Estimated effective R"[t]))
   return(p_R)
 }
 
 plot_Ri <- function(parametric_si_obj=NULL,
                     si_from_sample_obj=NULL,
-                    split=FALSE,
-                    title="",
-                    subtitle="") {
+                    split=FALSE) {
 
   R_df_parametric_si <- extract_R_I_df(parametric_si_obj)
 
@@ -57,28 +55,29 @@ plot_Ri <- function(parametric_si_obj=NULL,
     p_I_imp <- R_df_parametric_si %>%
            ggplot(aes(x=dates, y=I_imported)) +
            geom_col(fill="blue") +
-           labs(x="Date", y="Incidence",
-                title="Overseas-acquired incidence")
+           scale_x_date(date_labels = "%d %b") +
+           labs(x="Notification date", y="Incident cases")
 
     p_I_loc <- R_df_parametric_si %>%
            ggplot(aes(x=dates, y=I_local)) +
            geom_col(fill="red") +
-           labs(x="Date", y="Incidence",
-                title="Locally-acquired incidence")
+           scale_x_date(date_labels = "%d %b") +
+           labs(x="Notification date", y="Incident cases")
 
     return(list(p_R_parametric_si=p_R_parametric_si,
                 p_R_si_from_sample=p_R_si_from_sample,
                 p_I_loc=p_I_loc,
                 p_I_imp=p_I_imp,
                 p_SI_parametric_si=p_SI_parametric_si,
-                p_SI_si_from_sample=p_SI_si_from_sample))
-
+                p_SI_si_from_sample=p_SI_si_from_sample,
+                max_I=(as.integer(max(R_df_parametric_si$I_local,
+                          R_df_parametric_si$I_imported)/5) + 1)*5))
   } else {
     p_I <- R_df_parametric_si %>%
            ggplot(aes(x=dates, y=I)) +
            geom_col(fill="red") +
-           labs(x="Date", y="Incidence",
-                title="Overseas- and locally-acquired incidence")
+           scale_x_date(date_labels = "%d %b") +
+           labs(x="Notification date", y="Incident cases")
 
     return(list(p_R_parametric_si=p_R_parametric_si,
                 p_R_si_from_sample=p_R_si_from_sample,

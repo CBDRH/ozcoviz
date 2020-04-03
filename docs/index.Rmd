@@ -4,6 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    theme: bootstrap
 ---
 
 ```{r setup, include=FALSE}
@@ -16,6 +17,7 @@ library(patchwork)
 library(gganimate)
 #devtools::install_github('emitanaka/datalegreyar')
 library(datalegreyar)
+library(memoise)
 
 knitr::opts_chunk$set(cache = FALSE)
 ```
@@ -59,6 +61,9 @@ Home
 =======================================================================
 
 ```{r}
+# this just takes teh last 21 days of Australian data, Ideally it should show the 
+# whole history of Australian data since, say 1st March 2020
+
 vals <- covid %>%
           filter(country_region == "Australia") %>%
           arrange(date) %>%
@@ -66,9 +71,13 @@ vals <- covid %>%
           pull(cases)
 
 maxpos <- which(vals == max(vals))
-
-fig(datafy(vals, "covid19visualisations"), size=80,
-    symbol=setNames(c(maxpos, 20), c("max", "down")))
+if (all(vals[maxpos] > vals[18:21])) {
+  fig(datafy(vals, "covid19visualisations"), size=80,
+      symbol=setNames(c(maxpos, 18:20), c("max", rep("down",3))))
+} else {
+  fig(datafy(vals, "covid19visualisations"), size=80,
+      symbol=setNames(c(maxpos, 18:20), c("max", rep("up",3))))
+}
     
 ```
 
@@ -221,7 +230,9 @@ nsw_incidence_split_excl_uix <- nsw_incidence %>%
 ```
 
 ```{r get-si-sample, message=FALSE, include=FALSE, cache=FALSE}
-nishi_si_sample <- get_nishiura_si_sample()
+fc <- cache_filesystem(".nishiura_si_dist")
+memo_get_nishiura_si_sample <- memoise(get_nishiura_si_sample, cache = fc)
+nishi_si_sample <- memo_get_nishiura_si_sample()
 ```
 
 ```{r estimate-R-configs, cache=FALSE}

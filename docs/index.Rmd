@@ -65,7 +65,10 @@ vals <- covid %>%
           top_n(21, wt=row_number()) %>%
           pull(cases)
 
-fig(datafy(vals, "covid19visualisations"), size=80)
+maxpos <- which(vals == max(vals))
+
+fig(datafy(vals, "covid19visualisations"), size=80,
+    symbol=setNames(c(maxpos, 20), c("max", "down")))
     
 ```
 

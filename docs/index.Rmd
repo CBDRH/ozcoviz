@@ -1,10 +1,9 @@
 ---
-title: "Covid19 data"
+title: "COVID-19 Visualisations"
 output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    logo: flex_icon.png
 ---
 
 ```{r setup, include=FALSE}
@@ -14,6 +13,9 @@ library(tidyverse)
 library(lubridate)
 library(EpiEstim)
 library(patchwork)
+library(gganimate)
+#devtools::install_github('emitanaka/datalegreyar')
+library(datalegreyar)
 
 knitr::opts_chunk$set(cache = FALSE)
 ```
@@ -56,6 +58,18 @@ covid_changepoint <- covid %>%
 Home
 =======================================================================
 
+```{r}
+vals <- covid %>%
+          filter(country_region == "Australia") %>%
+          arrange(date) %>%
+          top_n(21, wt=row_number()) %>%
+          pull(cases)
+
+fig(datafy(vals, "covid19visualisations"), size=80)
+    
+```
+
+The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
 
 Cumulative {.tabset}
 =======================================================================
@@ -310,7 +324,9 @@ A4b <- plots_A$p_SI_si_from_sample +
        caption=paste("CC BY", # '\U1F16D','\U1F16F',
                      "Tim Churches, UNSW Medicine &\n",
                      "Nick Tierney, Monash University"))
+```
 
+```{r, eval=FALSE}
 # icon for flexdashboard
 flex_icon <- plots_A$p_R_parametric_si +
    xlim(ymd("2020-03-09"),NA) +

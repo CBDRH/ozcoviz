@@ -334,7 +334,6 @@ flex_icon <- plots_A$p_R_parametric_si +
         subtitle=NULL,
         caption=NULL) +
    theme_void()
-   
 ```
 
 
@@ -504,7 +503,7 @@ From data commentary blah blah blah.
 
 ### Explanation
 
-```{r}
+```{r, eval=FALSE}
 ggsave("docs/flex_icon.png", plot=flex_icon,
        units="in", dpi="retina",
        height=48/320, width=(48/320)*2)

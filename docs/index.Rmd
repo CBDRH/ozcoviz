@@ -262,6 +262,16 @@ $R_{t}$ for NSW {.storyboard}
 
 ### Explanation
 
+The total number of incident cases arising at timestep $t$, $I_t$, is the sum of the numbers of incident local ($I_{t}^{local}$) and imported ($I_{t}^{imported}$) cases,
+
+$$ I_t = I_t^{local} + I_t^{imported} $$
+
+It is assumed that, if imported cases exist, they can be distinguished from local cases, for instance through epidemiological investigations, so that 
+ $I_{t}^{local}$ and $I_{t}^{imported}$ are observed at each timestep.
+
+
+$$\Lambda_t(w_s) = \sum_{s=1}^t (I_{t-s}^{local} + I_{t-s}^{imported}) w_s = \sum_{s=1}^t I_{t-s} w_s $$
+$$ \mathbb E(I_t^{local} | I_0, I_1, \ldots, I_{t-1}, w_s, T_t) = R_t\Lambda_t (w_s)$$
 
 ---
 

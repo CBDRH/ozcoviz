@@ -4,7 +4,8 @@
 .Ruserdata
 index_cache
 .covid_cache
+.nishiura_si_dist/
 */*_cache/
-*/*_files/
-*/*.html
+docs/*_files/
+docs/*.html
 

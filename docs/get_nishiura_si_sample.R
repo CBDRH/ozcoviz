@@ -92,11 +92,13 @@ get_nishiura_si_sample <- function() {
                 as.data.frame()
 
     ## estimate the serial interval from data
-    nish_si_fit <- coarseDataTools::dic.fit.mcmc(dat = nish_si,
-                         dist = "L",
-                         init.pars = init_mcmc_params(nish_si, "L"),
-                         burnin = 1000,
-                         n.samples = 5000)
+    suppressMessages({
+      nish_si_fit <- coarseDataTools::dic.fit.mcmc(dat = nish_si,
+                           dist = "L",
+                           init.pars = init_mcmc_params(nish_si, "L"),
+                           burnin = 1000,
+                           n.samples = 5000)
+    })
 
     ## use coarse2estim to turn this in the right format for estimate_R
     nish_si_sample <- coarse2estim(nish_si_fit, thin = 100)$si_sample

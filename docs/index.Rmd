@@ -61,9 +61,9 @@ covid_changepoint <- covid %>%
 
 ```{r load-nsw-funcs, cache=FALSE}
 source(here::here("docs/get_nsw_data.R"))
-source(here::here("docs/get_nishiura_si_sample.R"))
 suppressMessages({
-source(here::here("docs/plot_nsw_eff_r.R"))
+  source(here::here("docs/get_nishiura_si_sample.R"))
+  source(here::here("docs/plot_nsw_eff_r.R"))
 })
 ```
 
@@ -75,7 +75,7 @@ Overview
 =======================================================================
 
 ```{r}
-# this just takes teh last 21 days of Australian data, Ideally it should show the 
+# this just takes the last 21 days of Australian data, Ideally it should show the 
 # whole history of Australian data since, say 1st March 2020
 
 vals <- covid %>%

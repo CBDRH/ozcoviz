@@ -299,6 +299,30 @@ Commentary
 
 ---
 
+### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas-acquired cases treated separately**, (cases under investigation excluded), parametric serial interval distribution
+
+```{r, fig.width=10, fig.height=10}
+UA1a / UA2a / UA3a / UA4a + plot_layout(heights=c(2,1,1,1))
+```
+
+***
+
+In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
+
+---
+
+### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas-acquired cases treated separately**, (cases under investigation excluded), serial interval distribution estimated from data
+
+```{r, fig.width=10, fig.height=10}
+UA1b / UA2b / UA3b / UA4b + plot_layout(heights=c(2,1,1,1))
+```
+
+***
+
+In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
+
+---
+
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation included)<br>parametric serial interval distribution
 
 ```{r, fig.width=10, fig.height=10}

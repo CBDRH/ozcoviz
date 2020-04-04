@@ -66,6 +66,19 @@ nsw_effr_split_excl_uix_si_from_sample <- estimate_R(nsw_incidence_split_excl_ui
                             si_sample=nishi_si_sample,
                             config = si_from_sample_nishiura_config)
 
+nsw_incidence_split_excl_uix_under_asc <- nsw_incidence_split_excl_uix %>%
+    mutate(local = local * 10,
+           imported = imported * 1.5)
+
+nsw_effr_split_excl_uix_para_si_under_asc <- estimate_R(nsw_incidence_split_excl_uix_under_asc,
+                                      method="parametric_si",
+                                      config = parametric_si_li_config)
+
+nsw_effr_split_excl_uix_si_from_sample_under_asc <- estimate_R(nsw_incidence_split_excl_uix_under_asc,
+                            method="si_from_sample",
+                            si_sample=nishi_si_sample,
+                            config = si_from_sample_nishiura_config)
+
 # generate plots
 # A
 plots_A <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si,
@@ -111,6 +124,61 @@ A4a <- plots_A$p_SI_parametric_si +
                      "Nick Tierney, Monash University"))
 
 A4b <- plots_A$p_SI_si_from_sample +
+  xlim(0,25) +
+  labs(title="Explored serial interval posterior estimates",
+       subtitle=expression(paste("from data given by Nishiura ", italic("et al."))),
+       caption=paste("CC BY", # '\U1F16D','\U1F16F',
+                     "Tim Churches, UNSW Medicine &\n",
+                     "Nick Tierney, Monash University"))
+
+# A
+plots_UA <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si_under_asc,
+                 si_from_sample_obj=nsw_effr_split_excl_uix_si_from_sample_under_asc,
+                 split=TRUE)
+
+UA1a <- plots_UA$p_R_parametric_si +
+  scale_y_log10(limits=c(0.25, 10)) +
+  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+       subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
+                       "and 50% imported case under-ascertainment.\n",
+                       "Local & overseas sources of infection treated separately\n",
+                       "Parametric serial interval distribution"))
+
+UA1b <- plots_UA$p_R_si_from_sample +
+  scale_y_log10(limits=c(0.25, 10)) +
+  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+       subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
+                       "and 50% imported case under-ascertainment.\n",
+                       "Local & overseas sources of infection treated separately\n",
+                       "Serial interval distribution estimated from data"))
+
+UA2a <- plots_UA$p_I_loc +
+    # ylim(0, plots_A$max_I) +
+    labs(title="Incidence: cases with local sources of infection",
+          subtitle="(excluding under investigation)")
+
+UA2b <- plots_UA$p_I_loc +
+    # ylim(0, plots_A$max_I) +
+    labs(title="Incidence: cases with local sources of infection",
+          subtitle="(excluding under investigation)")
+
+UA3a <- plots_UA$p_I_imp +
+    # ylim(0, plots_A$max_I) +
+    labs(title="Incidence: cases with overseas sources of infection")
+
+UA3b <- plots_UA$p_I_imp +
+    # ylim(0, plots_A$max_I) +
+    labs(title="Incidence: cases with overseas sources of infection")
+
+UA4a <- plots_UA$p_SI_parametric_si +
+  xlim(0,25) +
+  labs(title="Explored parametric serial interval distribution",
+       subtitle=expression(paste("from parameters given by Li ", italic("et al."))),
+       caption=paste("CC BY", # '\U1F16D','\U1F16F',
+                     "Tim Churches, UNSW Medicine &\n",
+                     "Nick Tierney, Monash University"))
+
+UA4b <- plots_UA$p_SI_si_from_sample +
   xlim(0,25) +
   labs(title="Explored serial interval posterior estimates",
        subtitle=expression(paste("from data given by Nishiura ", italic("et al."))),

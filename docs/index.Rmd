@@ -17,7 +17,7 @@ library(lubridate)
 library(EpiEstim)
 library(patchwork)
 library(gganimate)
-#devtools::install_github('emitanaka/datalegreyar')
+# devtools::install_github('emitanaka/datalegreyar')
 library(datalegreyar)
 library(memoise)
 
@@ -60,13 +60,15 @@ covid_changepoint <- covid %>%
 ```
 
 ```{r load-nsw-funcs, cache=FALSE}
-source("docs/get_nsw_data.R")
-source("docs/get_nishiura_si_sample.R")
-source("docs/plot_nsw_eff_r.R")
+source(here::here("docs/get_nsw_data.R"))
+source(here::here("docs/get_nishiura_si_sample.R"))
+suppressMessages({
+source(here::here("docs/plot_nsw_eff_r.R"))
+})
 ```
 
 ```{r prep-nsw-data-and-plots, cache=FALSE}
-source("docs/nsw_eff_R_data_and_plot_prep.R")
+source(here::here("docs/nsw_eff_R_data_and_plot_prep.R"))
 ```
 
 Overview
@@ -239,7 +241,7 @@ covid_instant_r <- add_instant_reproduction(covid_changepoint)
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
 gg_effective_repro_all(covid_instant_r) + 
-  ggthemes::scale_colour_colorblind() +
+  # ggthemes::scale_colour_colorblind() +
   theme(panel.grid.minor = element_blank())
   # annotation_logticks() 
 ```
@@ -249,7 +251,7 @@ gg_effective_repro_all(covid_instant_r) +
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
 gg_effective_repro_facet(covid_instant_r)  + 
-  ggthemes::scale_colour_colorblind() + 
+  # ggthemes::scale_colour_colorblind() + 
   theme(panel.grid.minor = element_blank())
   # annotation_logticks() 
 ```

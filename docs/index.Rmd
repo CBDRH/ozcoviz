@@ -1,10 +1,12 @@
 ---
-title: "COVID-19 Visualisations"
+title: "OzCoViz"
+date: "`r lubridate::now()`"
 output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
     theme: bootstrap
+    social: ["menu"]
 ---
 
 ```{r setup, include=FALSE}
@@ -67,7 +69,7 @@ source("docs/plot_nsw_eff_r.R")
 source("docs/nsw_eff_R_data_and_plot_prep.R")
 ```
 
-Home
+Overview
 =======================================================================
 
 ```{r}
@@ -77,29 +79,88 @@ Home
 vals <- covid %>%
           filter(country_region == "Australia") %>%
           arrange(date) %>%
-          top_n(21, wt=row_number()) %>%
+          top_n(25, wt=row_number()) %>%
           pull(cases)
 
 maxpos <- which(vals == max(vals))
-if (all(vals[maxpos] > vals[18:21])) {
-  fig(datafy(vals, "covid19visualisations"), size=80,
-      symbol=setNames(c(maxpos, 18:20), c("max", rep("down",3))))
+if (all(vals[maxpos] > vals[18:25])) {
+  fig(datafy(vals, "oz covid19 visualisations", ignore_space=FALSE), size=60,
+      symbol=setNames(c(maxpos, 18:24), c("max", rep("down",7))))
 } else {
-  fig(datafy(vals, "covid19visualisations"), size=80,
-      symbol=setNames(c(maxpos, 18:20), c("max", rep("up",3))))
+  fig(datafy(vals, "oz covid19 visualisations", ignore_space=FALSE), size=60,
+      symbol=setNames(c(maxpos, 18:24), c("max", rep("up",7))))
 }
     
 ```
 
 The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
 
-Cumulative {.tabset}
+Column  {.tabset}
+-----------------------------------------------------------------------
+
+### Overview
+
+### Contributors
+
+These graphics are licensed with a [CC BY-NC-SA License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+Users must provide personal and institutional acknowledgement on reuse
+
+In turn, we acknowledge RECON, and EuroCDC
+
+Project has been led by [Timothy Churches](), [Nicholas Tierney](), with thanks to [Stuart Lee](), [Dianne Cook](), and [Miles McBain]()
+
+
+
+Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
+
+Source code for this visualisation are available at [covid-flexdashboard](https://github.com/CBDRH/covid-flexdashboard)
+
+### Technical Details
+
+Analysis used includes:
+
+- Use
+
+Packages used include:
+
+- flexdashboard
+- tidyverse
+- readr
+- tibble
+- dplyr
+- tidyr
+- stringr
+- lubridate
+- magrittr
+- countrycode
+- janitor
+- stats
+- scales
+- readxl
+- httr
+- glue
+- purrr
+- rlang
+- ggplot2
+- EpiEstim
+- changepoint
+- ggrepel
+- vctrs
+- memoise
+
+
+Incidence {.tabset}
 =======================================================================
 
 Column  {.tabset}
 -----------------------------------------------------------------------
 
-### Cumulative Incidence
+### Explanation
+
+### Cumulative Incidence for selected countries
 
 ```{r since-100}
 covid_since_100 <- covid %>% 
@@ -117,15 +178,8 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
   # annotation_logticks(sides = "l") 
 ```
 
-### Explanation
 
-Cases {.tabset}
-=======================================================================
-
-Column  {.tabset}
------------------------------------------------------------------------
-
-### Oz Cases
+### Australian incidence
 
 ```{r oz-cases}
 library(glue)
@@ -155,7 +209,7 @@ gg_cases
   
 ```
 
-### Oz Cases (log10)
+### Australian incidence (semi-log)
 
 ```{r oz-cases-log10}
 gg_cases +
@@ -166,13 +220,14 @@ gg_cases +
   
 ```
 
-### Explanation
 
-IER {.tabset}
+National-level $R_{t}$ {.tabset}
 =======================================================================
 
 Column  {.tabset}
 -----------------------------------------------------------------------
+
+### Explanation
 
 ### Selected Countries
 
@@ -189,13 +244,6 @@ gg_effective_repro_all(covid_instant_r) +
   # annotation_logticks() 
 ```
 
-### Explanation
-
-Effective R (Per country) {.tabset}
-=======================================================================
-
-Column  {.tabset}
------------------------------------------------------------------------
 
 ### Per Country
 
@@ -206,11 +254,14 @@ gg_effective_repro_facet(covid_instant_r)  +
   # annotation_logticks() 
 ```
 
-### Explanation
 
-Effective R (NSW) {.storyboard}
+$R_{t}$ for NSW {.storyboard}
 =======================================================================
 
+### Explanation
+
+
+---
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
 
@@ -285,62 +336,6 @@ From data commentary blah blah blah.
 
 ---
 
-### Explanation
 
-
----
-
-Contributors
-=======================================================================
-
-These graphics are licensed with a [CC BY-NC-SA License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-
-Users must provide personal and institutional acknowledgement on reuse
-
-In turn, we acknowledge RECON, and EuroCDC
-
-Project has been led by [Timothy Churches](), [Nicholas Tierney](), with thanks to [Stuart Lee](), [Dianne Cook](), and [Miles McBain]()
-
-
-
-Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
-
-Source code for this visualisation are available at [covid-flexdashboard](https://github.com/CBDRH/covid-flexdashboard)
-
-Technical Details
-=======================================================================
-
-Analysis used includes:
-
-- Use
-
-Packages used include:
-
-- flexdashboard
-- tidyverse
-- readr
-- tibble
-- dplyr
-- tidyr
-- stringr
-- lubridate
-- magrittr
-- countrycode
-- janitor
-- stats
-- scales
-- readxl
-- httr
-- glue
-- purrr
-- rlang
-- ggplot2
-- EpiEstim
-- changepoint
-- ggrepel
-- vctrs
-- memoise
 
 

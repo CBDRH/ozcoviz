@@ -54,13 +54,13 @@ plot_Ri <- function(parametric_si_obj=NULL,
   if (split) {
     p_I_imp <- R_df_parametric_si %>%
            ggplot(aes(x=dates, y=I_imported)) +
-           geom_col(fill="blue") +
+           geom_col(fill="steelblue") +
            scale_x_date(date_labels = "%d %b") +
            labs(x="Notification date", y="Incident cases")
 
     p_I_loc <- R_df_parametric_si %>%
            ggplot(aes(x=dates, y=I_local)) +
-           geom_col(fill="red") +
+           geom_col(fill="salmon") +
            scale_x_date(date_labels = "%d %b") +
            labs(x="Notification date", y="Incident cases")
 
@@ -75,7 +75,7 @@ plot_Ri <- function(parametric_si_obj=NULL,
   } else {
     p_I <- R_df_parametric_si %>%
            ggplot(aes(x=dates, y=I)) +
-           geom_col(fill="red") +
+           geom_col(fill="salmon") +
            scale_x_date(date_labels = "%d %b") +
            labs(x="Notification date", y="Incident cases")
 

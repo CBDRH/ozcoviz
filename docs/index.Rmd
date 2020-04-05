@@ -60,9 +60,10 @@ covid <- covid_latest() %>%
 
 
 ```{r covid-changepoint}
-covid_changepoint <- covid %>% 
-  add_covid_change_point() %>% 
-  filter(date >= change_point_date)
+## not needed anymore since we'll fit it to the whole dataset and filter later
+# covid_changepoint <- covid %>% 
+#   add_covid_change_point() %>% 
+#   filter(date >= change_point_date)
 ```
 
 ```{r load-nsw-funcs, cache=FALSE}
@@ -89,16 +90,24 @@ Overview
 vals <- covid %>%
           filter(country_region == "Australia") %>%
           arrange(date) %>%
-          top_n(25, wt=row_number()) %>%
+          top_n(25, wt = row_number()) %>%
           pull(cases)
 
 maxpos <- which(vals == max(vals))
 if (all(vals[maxpos] > vals[18:25])) {
-  fig(datafy(vals, "oz covid19 visualisations", ignore_space=FALSE), size=60,
-      symbol=setNames(c(maxpos, 18:24), c("max", rep("down",7))))
+  fig(datafy(values = vals, 
+             text = "oz covid19 visualisations", 
+             ignore_space = FALSE), 
+      size=60,
+      symbol = setNames(c(maxpos, 18:24), 
+                        c("max", rep("down",7))))
 } else {
-  fig(datafy(vals, "oz covid19 visualisations", ignore_space=FALSE), size=60,
-      symbol=setNames(c(maxpos, 18:24), c("max", rep("up",7))))
+  fig(datafy(values = vals, 
+             text = "oz covid19 visualisations", 
+             ignore_space = FALSE), 
+      size = 60,
+      symbol = setNames(c(maxpos, 18:24), 
+                        c("max", rep("up",7))))
 }
     
 ```
@@ -113,14 +122,15 @@ Column  {.tabset}
 This dashboard presents two key pieces of data analysis:
 
 1. Case Incidence
-2. Estimated spread of COVID19
+2. Effective reproduction number
 
 **Case Incidence**
 
 This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
 
-**Estimated spread of COVID19**
+**Effective reproduction number**
 
+These estimates reflect the number of new cases we expect from an infected person as they interact with a population. The higher the number, the worse the control of the infection, and the more people will be infected. We want this number to be below 1, and preferably as close to 0 as possible.
 
 
 ### Contributors
@@ -245,18 +255,57 @@ Column  {.tabset}
 
 ### Explanation
 
+To understand the spread of COVID19, we can look at a statistic called "R0" (R-nought). This is the number of people we expect to be infected if one COVID19 infected person arrives, and can spread it.
+
+The R0 is the number of people we expect are directly caused by the spread of this one person. 
+
+The effective reproduction number (different to basic reproduction number) reflects the current state of a population, which may include some infections. 
+
+This is what we are estimating.
+
+**What does this mean?**
+
+If the R0 number is 1, this means that one person arriving to a population could spread it to one other person. Those people could then spread it to one other person. This is easier to manage. 
+
+If R0 is 0.3, then for every 10 people infected, it would spread to 3 other people.
+
+Both of these are good cases.
+
+Now, some bad cases.
+
+If the R0 number is 2, this means that every person arriving in the population can infect 2 more people. This can quickly get out of control.
+
+We want the R0 to be below 1, and ideally as close to 0 as possible.
+
+**Estimating Effective reproduction number**
+
+We estimate the effective reproduction number using mathematical modelling. This means that the estimated numbers are dependent upon the mathematical model, and while they are our best possible guess at R0, they could be inaccurate.
+
+
+**Misconceptions / mistakes**
+
+It is not a rate, and has no units of time.
+This means it is not a rate of infection, and does not tell us how fast an infection spreads.
+
+**Limitations**
+
+These estimates are for all countries do not account for people who bring the infection to the population by travelling. This means that we are assuming all of these infections are spread by the community. However, Australia actually has quite a large proportion of people who are travelling from overseas with COVID19. This means that these estimates might be over-estimating R0. We have explored what is possible if we improve incorporate these imported cases, where we have this data for New South Wales.
+
+
 ### Selected Countries
 
 
 ```{r covid-instant-repro}
-covid_instant_r <- add_instant_reproduction(covid_changepoint)
+covid_instant_r <- add_instant_reproduction(covid) %>% 
+  # only look at dates from March
+  filter(date > ymd("2020-03-01")) 
 ```
 
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
-gg_effective_repro_all(covid_instant_r) + 
-  # ggthemes::scale_colour_colorblind() +
+  gg_effective_repro_all(covid_instant_r) + 
   theme(panel.grid.minor = element_blank())
+  # ggthemes::scale_colour_colorblind() +
   # annotation_logticks() 
 ```
 
@@ -264,10 +313,20 @@ gg_effective_repro_all(covid_instant_r) +
 ### Per Country
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
-gg_effective_repro_facet(covid_instant_r)  + 
-  # ggthemes::scale_colour_colorblind() + 
+covid_instant_r %>% 
+  gg_effective_repro_facet()  + 
   theme(panel.grid.minor = element_blank())
-  # annotation_logticks() 
+```
+
+### Per Country (ribbons)
+
+```{r gg-effective-r-facet-ribbon, fig.height = 8, fig.width = 12}
+covid_instant_r %>% 
+  gg_effective_repro_facet()  + 
+  geom_ribbon(aes(ymin = quantile_0_025_r,
+                  ymax = quantile_0_975_r),
+              alpha = 0.1,
+              colour = "gray50") 
 ```
 
 

@@ -48,7 +48,13 @@ yesterday <- today() - 1L
 
 covid <- covid_latest() %>% 
   filter(date < yesterday) %>% 
-  filter(country_region %in% selected_countries) 
+  filter(country_region %in% selected_countries) %>% 
+  mutate(country_region = case_when(
+    country_region == "United_States_of_America" ~ "USA",
+    country_region == "United_Kingdom" ~ "UK",
+    TRUE ~ country_region
+    )
+    )
 
 ```
 
@@ -68,7 +74,9 @@ suppressMessages({
 ```
 
 ```{r prep-nsw-data-and-plots, cache=FALSE}
-source(here::here("docs/nsw_eff_R_data_and_plot_prep.R"))
+suppressMessages({
+  source(here::here("docs/nsw_eff_R_data_and_plot_prep.R"))
+})
 ```
 
 Overview
@@ -102,9 +110,20 @@ Column  {.tabset}
 
 ### Overview
 
-### Contributors
+This dashboard presents two key pieces of data analysis:
 
-These graphics are licensed with a [CC BY-NC-SA License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+1. Case Incidence
+2. Estimated spread of COVID19
+
+**Case Incidence**
+
+This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
+
+**Estimated spread of COVID19**
+
+
+
+### Contributors
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
@@ -114,44 +133,35 @@ In turn, we acknowledge RECON, and EuroCDC
 
 Project has been led by [Timothy Churches](), [Nicholas Tierney](), with thanks to [Stuart Lee](), [Dianne Cook](), and [Miles McBain]()
 
-
-
 Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
 
 Source code for this visualisation are available at [covid-flexdashboard](https://github.com/CBDRH/covid-flexdashboard)
 
 ### Technical Details
 
-Analysis used includes:
+Data Analysis has been entirely created within the [R programming language](), and [Rstudio]()
 
-- Use
+The dashboard can be entirely recreated using the open source code provided at [github]()
 
 Packages used include:
 
-- flexdashboard
-- tidyverse
-- readr
-- tibble
-- dplyr
-- tidyr
-- stringr
-- lubridate
-- magrittr
-- countrycode
-- janitor
-- stats
-- scales
-- readxl
-- httr
-- glue
-- purrr
-- rlang
-- ggplot2
-- EpiEstim
-- changepoint
-- ggrepel
-- vctrs
-- memoise
+- [flexdashboard](https://cran.r-project.org/web/packages/flexdashboard)
+- [tidyverse](https://cran.r-project.org/web/packages/tidyverse)
+- [magrittr](https://cran.r-project.org/web/packages/magrittr)
+- [countrycode](https://cran.r-project.org/web/packages/countrycode)
+- [janitor](https://cran.r-project.org/web/packages/janitor)
+- [scales](https://cran.r-project.org/web/packages/scales)
+- [readxl](https://cran.r-project.org/web/packages/readxl)
+- [httr](https://cran.r-project.org/web/packages/httr)
+- [glue](https://cran.r-project.org/web/packages/glue)
+- [EpiEstim](https://cran.r-project.org/web/packages/EpiEstim)
+- [changepoint](https://cran.r-project.org/web/packages/changepoint)
+- [ggrepel](https://cran.r-project.org/web/packages/ggrepel)
+- [memoise](https://cran.r-project.org/web/packages/memoise)
+- [patchwork](https://cran.r-project.org/web/packages/patchwork)
+- [datalegreyar](https://github.com/emitanaka/datalegreyar)
+- [memoise](https://cran.r-project.org/web/packages/)
+
 
 
 Incidence {.tabset}
@@ -161,6 +171,10 @@ Column  {.tabset}
 -----------------------------------------------------------------------
 
 ### Explanation
+
+**Case Incidence**
+
+This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
 
 ### Cumulative Incidence for selected countries
 

@@ -47,7 +47,7 @@ selected_countries <- c(
 yesterday <- today() - 1L
 
 covid <- covid_latest() %>% 
-  filter(date < yesterday) %>% 
+#   filter(date < yesterday) %>% 
   filter(country_region %in% selected_countries) %>% 
   mutate(country_region = case_when(
     country_region == "United_States_of_America" ~ "USA",
@@ -60,10 +60,9 @@ covid <- covid_latest() %>%
 
 
 ```{r covid-changepoint}
-## not needed anymore since we'll fit it to the whole dataset and filter later
-# covid_changepoint <- covid %>% 
-#   add_covid_change_point() %>% 
-#   filter(date >= change_point_date)
+covid_changepoint <- covid %>% 
+  add_covid_change_point() %>% 
+  filter(date >= change_point_date)
 ```
 
 ```{r load-nsw-funcs, cache=FALSE}
@@ -205,9 +204,8 @@ covid_since_100 <- covid %>%
 
 gg_covid_cumulative_exceed_limit(covid_since_100,
                                  limit = 100) + 
-  theme(panel.grid.minor = element_blank()) 
-  # ggthemes::scale_colour_colorblind() +
-  # annotation_logticks(sides = "l") 
+  theme(panel.grid.minor = element_blank())  +
+  scale_colour_hue()
 ```
 
 
@@ -304,14 +302,15 @@ These estimates are for all countries do not account for people who bring the in
 
 
 ```{r covid-instant-repro}
-covid_instant_r <- add_instant_reproduction(covid) %>% 
-  # only look at dates from March
-  filter(date > ymd("2020-03-01")) 
+covid_instant_r <- add_instant_reproduction(covid_changepoint)
 ```
 
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
-  gg_effective_repro_all(covid_instant_r) + 
+covid_instant_r %>%
+  # only look at dates from March
+  filter(date > ymd("2020-03-01")) %>%
+  gg_effective_repro_all() + 
   theme(panel.grid.minor = element_blank())
   # ggthemes::scale_colour_colorblind() +
   # annotation_logticks() 
@@ -322,6 +321,7 @@ covid_instant_r <- add_instant_reproduction(covid) %>%
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
 covid_instant_r %>% 
+  filter(date > ymd("2020-03-01")) %>%
   gg_effective_repro_facet()  + 
   theme(panel.grid.minor = element_blank())
 ```

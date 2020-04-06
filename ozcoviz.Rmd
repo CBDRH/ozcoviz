@@ -174,12 +174,8 @@ Packages used include:
 - [memoise](https://cran.r-project.org/web/packages/)
 
 
-
-Incidence {.tabset}
+Incidence {.storyboard}
 =======================================================================
-
-Column  {.tabset}
------------------------------------------------------------------------
 
 ### Explanation
 
@@ -204,6 +200,9 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
   scale_colour_hue()
 ```
 
+***
+
+Blah blah.
 
 ### Australian incidence
 
@@ -235,6 +234,10 @@ gg_cases
   
 ```
 
+***
+
+Blah blah b;ah.
+
 ### Australian incidence (semi-log)
 
 ```{r oz-cases-log10}
@@ -246,12 +249,13 @@ gg_cases +
   
 ```
 
+***
 
-National-level $R_{t}$ {.tabset}
+Such is life.
+
+National-level $R_{t}$ {.storyboard}
 =======================================================================
 
-Column  {.tabset}
------------------------------------------------------------------------
 
 ### Explanation
 
@@ -312,6 +316,9 @@ covid_instant_r %>%
   # annotation_logticks() 
 ```
 
+***
+
+And so it goes.
 
 ### Per Country
 
@@ -321,6 +328,10 @@ covid_instant_r %>%
   gg_effective_repro_facet()  + 
   theme(panel.grid.minor = element_blank())
 ```
+
+***
+
+Some good, some bad.
 
 ### Per Country (ribbons)
 
@@ -332,6 +343,10 @@ covid_instant_r %>%
               alpha = 0.1,
               colour = "gray50") 
 ```
+
+***
+
+Tie a yellow riboon...
 
 
 $R_{t}$ for NSW {.storyboard}
@@ -350,7 +365,6 @@ It is assumed that, if imported cases exist, they can be distinguished from loca
 $$\Lambda_t(w_s) = \sum_{s=1}^t (I_{t-s}^{local} + I_{t-s}^{imported}) w_s = \sum_{s=1}^t I_{t-s} w_s $$
 $$ \mathbb E(I_t^{local} | I_0, I_1, \ldots, I_{t-1}, w_s, T_t) = R_t\Lambda_t (w_s)$$
 
----
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
 
@@ -362,7 +376,6 @@ A1a / A2a / A3a / A4a + plot_layout(heights=c(2,1,1,1))
 
 Commentary
 
----
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>serial interval distribution estimated from data
 

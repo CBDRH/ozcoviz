@@ -1,5 +1,5 @@
 ---
-title: "OzCoViz"
+title: "CoViz"
 date: "`r lubridate::now()`"
 output:
   flexdashboard::flex_dashboard:
@@ -83,7 +83,7 @@ suppressMessages({
 Overview
 =======================================================================
 
-```{r}
+```{r, fig.align='center'}
 # this just takes the last 21 days of Australian data, Ideally it should show the 
 # whole history of Australian data since, say 1st March 2020
 
@@ -117,27 +117,33 @@ The time-series line in the heading above is derived from current incidence case
 Column  {.tabset}
 -----------------------------------------------------------------------
 
-### Overview
+### Introduction
 
-This dashboard presents two key pieces of data analysis:
+This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Economics and Business Statistics Research Unit](https://research.monash.edu/en/organisations/econometrics-business-statistics) in the the [Monash University Faculty of Business & Economics](https://research.monash.edu/en/organisations/faculty-of-business-economics), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
 
-1. Case Incidence
-2. Effective reproduction number
+```{r, out.width="20%", fig.show='hold', out.extra='style="padding:25px"'}
+knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
+knitr::include_graphics(path=here::here("assets/unsw_logo.png"))
+knitr::include_graphics(path=here::here("assets/monash-logo-mono.png"))
+knitr::include_graphics(path=here::here("assets/ingham_logo.png"))
+```
 
-**Case Incidence**
+```{r, out.width="20%", fig.align="right", eval=FALSE}
+knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
+```
 
-This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
+The intent is to offer a range of principled epidemiological and statistical analyses and visualisations of current COVID-19 data which go beyond the now ubiquitous [world maps and cumulative incidence charts](https://coronavirus.jhu.edu/map.html). 
 
-**Effective reproduction number**
+The broad themes for the analyses and visualisation currently available are listed in the menu at the top of this page -- more will be added in due course. For each theme there is an introductory page explaining the motivating ideas and methodology employed for each visualisation or analysis, which are available on the subsequent tabs or frames (the series of rectangles at the top of each page) for that theme. Additional notes or commentary appear on the right of some pages.
 
-These estimates reflect the number of new cases we expect from an infected person as they interact with a population. The higher the number, the worse the control of the infection, and the more people will be infected. We want this number to be below 1, and preferably as close to 0 as possible.
+#### An Australian focus with an international perspective
 
+This site has been created by researchers at Australian universities, and hence the focus is on the situation in Australia, within the broader international context -- we are, after all, all in this together. However, we hope that some of the analyses and visualisations on this site might be useful elsewhere, and to that end, all the [`R`](https://www.r-project.org) source code used to create this site if freely available -- please see the _Technical details_ tab above. 
 
 ### Contributors
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />The content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. If you wish to re-use any of the content, please retain the attribution which appears on each chart or set of charts, or otherwise provide that attribution alongside the content that you re-use.
 
-Users must provide personal and institutional acknowledgement on reuse
 
 In turn, we acknowledge RECON, and EuroCDC
 
@@ -280,6 +286,8 @@ We want the R0 to be below 1, and ideally as close to 0 as possible.
 **Estimating Effective reproduction number**
 
 We estimate the effective reproduction number using mathematical modelling. This means that the estimated numbers are dependent upon the mathematical model, and while they are our best possible guess at R0, they could be inaccurate.
+
+These estimates reflect the number of new cases we expect from an infected person as they interact with a population. The higher the number, the worse the control of the infection, and the more people will be infected. We want this number to be below 1, and preferably as close to 0 as possible.
 
 
 **Misconceptions / mistakes**

@@ -1,12 +1,15 @@
-covid_dashboard_name <- glue::glue("docs/ozcovis-{lubridate::today()}.html")
-covid_dashboard_name
+library(glue)
+library(rmarkdown)
+library(here)
+library(lubridate)
 
-rmarkdown::render(input =  "ozcoviz.Rmd",
-                  output_file = covid_dashboard_name,
-                  output_dir = here::here("docs"),
-                  clean = TRUE)
+render(input =  "ozcoviz.Rmd",
+       output_file = glue("docs/ozcovis-{lubridate::today()}.html"),
+       output_dir = here("docs"),
+       clean = TRUE)
 
-rmarkdown::render(input =  "ozcoviz.Rmd",
-                  output_file = "index.html",
-                  output_dir = here::here("docs"),
-                  clean = TRUE)
+# generate the index
+render(input =  "ozcoviz.Rmd",
+       output_file = "index.html",
+       output_dir = here("docs"),
+       clean = TRUE)

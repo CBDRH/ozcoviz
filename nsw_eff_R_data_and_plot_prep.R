@@ -284,7 +284,7 @@ if (FALSE) {
             caption=NULL) +
        theme_void()
 
-  ggsave("docs/flex_icon.png", plot=flex_icon,
+  ggsave("images/flex_icon.png", plot = flex_icon,
          units="in", dpi="retina",
          height=48/320, width=(48/320)*2)
 }

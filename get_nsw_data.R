@@ -105,7 +105,7 @@ get_nsw_data <- function() {
                                    "/download/covid-19-cases-by-notification-date",
                                    "-and-likely-source-of-infection.csv")
 
-    colspec <- cols(notification_date = col_date(format = "%Y-%m-%d"),
+    colspec <- cols(notification_date = col_date(format = "%d-%m-%y"),
                     likely_source_of_infection = col_character())
 
     nsw_incidence_by_source <- read_csv(nsw_incidence_by_source_url,

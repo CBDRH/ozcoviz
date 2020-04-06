@@ -65,24 +65,20 @@ covid_changepoint <- covid %>%
   filter(date >= change_point_date)
 ```
 
-```{r load-nsw-funcs, cache=FALSE}
-source(here::here("docs/get_nsw_data.R"))
-suppressMessages({
-  source(here::here("docs/get_nishiura_si_sample.R"))
-  source(here::here("docs/plot_nsw_eff_r.R"))
-})
+```{r load-nsw-funcs, cache=FALSE, include = FALSE}
+source("get_nsw_data.R")
+source("get_nishiura_si_sample.R")
+source("plot_nsw_eff_r.R")
 ```
 
-```{r prep-nsw-data-and-plots, cache=FALSE}
-suppressMessages({
-  source(here::here("docs/nsw_eff_R_data_and_plot_prep.R"))
-})
+```{r prep-nsw-data-and-plots, cache=FALSE, include = FALSE}
+source("nsw_eff_R_data_and_plot_prep.R")
 ```
 
 Overview
 =======================================================================
 
-```{r, fig.align='center'}
+```{rdatalegreyar, fig.align='center'}
 # this just takes the last 21 days of Australian data, Ideally it should show the 
 # whole history of Australian data since, say 1st March 2020
 
@@ -358,7 +354,7 @@ $$ \mathbb E(I_t^{local} | I_0, I_1, \ldots, I_{t-1}, w_s, T_t) = R_t\Lambda_t (
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
 
-```{r, fig.width=10, fig.height=10}
+```{r nsw-local-os-sep, fig.width=10, fig.height=10}
 A1a / A2a / A3a / A4a + plot_layout(heights=c(2,1,1,1))
 ```
 
@@ -370,7 +366,7 @@ Commentary
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>serial interval distribution estimated from data
 
-```{r, fig.width=10, fig.height=10}
+```{r nsw-local-os-sep-est-si-dist, fig.width=10, fig.height=10}
 A1b / A2b / A3b / A4b + plot_layout(heights=c(2,1,1,1))
 ```
 
@@ -382,7 +378,7 @@ Commentary
 
 ### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas-acquired cases treated separately**, (cases under investigation excluded), parametric serial interval distribution
 
-```{r, fig.width=10, fig.height=10}
+```{r nsw-adj-local-acquire-separately, fig.width=10, fig.height=10}
 UA1a / UA2a / UA3a / UA4a + plot_layout(heights=c(2,1,1,1))
 ```
 
@@ -394,7 +390,7 @@ In these plots, the counts of incident cases with presumed local sources of infe
 
 ### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas-acquired cases treated separately**, (cases under investigation excluded), serial interval distribution estimated from data
 
-```{r, fig.width=10, fig.height=10}
+```{r nsw-adj-under-os-separately, fig.width=10, fig.height=10}
 UA1b / UA2b / UA3b / UA4b + plot_layout(heights=c(2,1,1,1))
 ```
 
@@ -406,7 +402,7 @@ In these plots, the counts of incident cases with presumed local sources of infe
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation included)<br>parametric serial interval distribution
 
-```{r, fig.width=10, fig.height=10}
+```{r nsw-local-os-separately-paramtric, fig.width=10, fig.height=10}
 B1a / B2a / B3a / B4a + plot_layout(heights=c(2,1,1,1))
 ```
 
@@ -418,7 +414,7 @@ Commentary
 
 ### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation included)<br>serial interval distribution estimated from data
 
-```{r, fig.width=10, fig.height=10}
+```{r nsw-local-os-sep-si-dist-data, fig.width=10, fig.height=10}
 B1b / B2b / B3b / B4b + plot_layout(heights=c(2,1,1,1))
 ```
 
@@ -431,7 +427,7 @@ Commentary
 
 ### **NSW -- all cases treated as locally-acquired**<br>parametric serial interval distribution
 
-```{r, fig.width=10, fig.height=10,}
+```{r nsw-all-cases-locally, fig.width=10, fig.height=10,}
 C1a / C2a / C3a + plot_layout(heights=c(2,1.5,1.5))
 ```
 
@@ -443,7 +439,7 @@ From data commentary blah blah blah.
 
 ### **NSW -- all cases treated as locally-acquired**<br>serial interval distribution estimated from data
 
-```{r, fig.width=10, fig.height=10,}
+```{r nsw-all-cases-locally-si-est-data, fig.width=10, fig.height=10,}
 C1b / C2b / C3b + plot_layout(heights=c(2,1.5,1.5))
 ```
 

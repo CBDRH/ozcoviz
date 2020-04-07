@@ -205,6 +205,7 @@ Note that Australia the curve is starting to flatten, as we have had fewer cases
 
 Although Australia does not have the same level of control over cases as countries like Japan and Singapore, it seems that the measures the Australian government have taken to limit travelers, and enforce physical distancing are working.
 
+
 ### Australian incidence
 
 ```{r oz-cases}
@@ -348,6 +349,137 @@ covid_instant_r %>%
 
 Tie a yellow riboon...
 
+### Australia
+
+```{r this-is-australia}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Australia")
+```
+
+***
+
+
+
+### Japan
+
+```{r this-is-japan}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Japan")
+```
+
+***
+
+Cool!
+
+### South Korea
+
+```{r this-is-south-krea}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "South Korea")
+```
+
+***
+
+Cool!
+
+### China
+
+```{r this-is-china}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "China")
+```
+
+***
+
+Cool!
+
+### Germany
+
+```{r this-is-germany}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Germany")
+```
+
+***
+
+Cool!
+
+### Spain
+
+```{r this-is-spain}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Spain")
+```
+
+***
+
+Cool!
+
+### France
+
+```{r this-is-france}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "France")
+```
+
+***
+
+Cool!
+
+### Italy
+
+```{r this-is-italy}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Italy")
+```
+
+***
+
+Cool!
+
+### Singapore
+
+```{r this-is-singapore}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Singapore")
+```
+
+***
+
+Cool!
+
+### United Kingdom
+
+```{r this-is-uk}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "UK")
+```
+
+***
+
+Cool!
+
+### USA
+
+```{r this-is-usa}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "USA")
+```
+
+***
+
+Cool!
 
 $R_{t}$ for NSW {.storyboard}
 =======================================================================

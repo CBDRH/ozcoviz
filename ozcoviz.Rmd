@@ -33,6 +33,7 @@ selected_countries <- c(
                         "United_Kingdom",
                         "United_States_of_America",
                         "South_Korea",
+                        "New_Zealand",
                         # "Canada",
                         "Germany", 
                         "Japan",
@@ -189,7 +190,7 @@ covid_since_100 <- covid %>%
 
 ```
 
-```{r gg-cumulative-incidence}
+```{r gg-cumulative-incidence, fig.height = 8, fig.width = 12}
 
 gg_covid_cumulative_exceed_limit(covid_since_100,
                                  limit = 100) + 
@@ -205,33 +206,36 @@ Note that Australia the curve is starting to flatten, as we have had fewer cases
 
 Although Australia does not have the same level of control over cases as countries like Japan and Singapore, it seems that the measures the Australian government have taken to limit travelers, and enforce physical distancing are working.
 
-### Australian incidence
+### Daily Global Incidence
 
-```{r oz-cases}
-library(glue)
-covid_since_100_au <- covid_since_100 %>% 
-  filter(geo_id == "AU") 
-  
-oz_cases_max_date <- format(max(covid_since_100_au$date), "%d %B %Y")
-oz_cases_min_date <- format(min(covid_since_100_au$date), "%d %B %Y")
+```{r global-cases, fig.height = 8, fig.width = 12}
 
-gg_cases <- ggplot(covid_since_100_au,
-       aes(x = date,
-           y = cases)) + 
-  geom_col(fill = "black") + 
+covid_since_100_w_total <- covid_since_100 %>% 
+  group_by(country_region) %>% 
+  mutate(total_cases = sum(cases))
+
+covid_since_100_w_total_labels <- slice(covid_since_100_w_total, 1) 
+
+gg_cases <-  ggplot(covid_since_100_w_total,
+                    aes(x = date,
+                        y = cases,
+                        fill = country_region)) + 
+  geom_col() + 
   theme_minimal() +
-  labs(title = "COVID-19 epidemic case incidence",
-       subtitle = glue(
-         "For Australia from {oz_cases_min_date} to {oz_cases_max_date}"
-       ),
+  theme(legend.position = "none") +
+  labs(title = "Daily number of COVID19 cases for each country",
        x = "Date since cumulative cases exceeded 100",
        y = "New Cases",
        caption = "CC BY-NC-SA
                Tim Churches (UNSW)
                Nick Tierney (Monash)
-               Data source: European CDC")
+               Data source: European CDC") +
+  scale_x_datetime(date_labels = "%b %d")
 
-gg_cases
+gg_cases + 
+    facet_wrap(~reorder(country_region, -total_cases),
+               scales = "free") +
+  labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith Y scale freely fit to match data for each country")
   
 ```
 
@@ -241,18 +245,20 @@ The number of cases per day recorded in Australia, as provided by the European C
 
 We note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is recording Australia's data. Until Australia releases our own records publicly, this is the best that we can do.
 
-### Australian incidence (semi-log)
+### Daily Global Incidence (free scales)
 
-```{r oz-cases-log10}
-gg_cases +
-   scale_y_log10() +
-  theme(panel.grid.minor = element_blank()) +
-  # annotation_logticks() + 
-  labs(y = "New Cases (Log Scale")
-  
+```{r world-incidence-free-scales, fig.height = 8, fig.width = 12}
+gg_cases + 
+    facet_wrap(~reorder(country_region, -total_cases),
+               scales = "free_x") +
+  labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith Y scale fixed to assist comparison across countries")
 ```
 
 ***
+
+Forcing the y axis scales to be the same for all plots means that, compared to the previous plot where the y axis could change for each country, the country with the largest number cases, in this case, the USA, appears the same, and the rest of the plots appear smaller.
+
+This give us an important context of the number of cases relative to each country. The bottom row of countries, Australia, Japan, Singapore, and New Zealand barely register.
 
 National-level $R_{t}$ {.storyboard}
 =======================================================================
@@ -302,15 +308,17 @@ These estimates are for all countries do not account for people who bring the in
 
 
 ```{r covid-instant-repro}
-covid_instant_r <- add_instant_reproduction(covid_changepoint)
+covid_instant_r <- add_instant_reproduction(covid_changepoint) %>%
+  group_by(country_region) %>% 
+  mutate(total_cases = sum(cases)) %>% 
+  ungroup() %>% 
+  # only look at dates from March
+  filter(date > ymd("2020-03-01"))
 ```
 
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
-covid_instant_r %>%
-  # only look at dates from March
-  filter(date > ymd("2020-03-01")) %>%
-  gg_effective_repro_all() + 
+  gg_effective_repro_all(covid_instant_r) + 
   theme(panel.grid.minor = element_blank())
   # ggthemes::scale_colour_colorblind() +
   # annotation_logticks() 
@@ -318,26 +326,27 @@ covid_instant_r %>%
 
 ***
 
-And so it goes.
+The effective R estimates for each country indicate that most countries are bringing the spread of the virus under control. However there is some wide variation. The measurement of effective R for Australia has decreased substantially, now falling below one, indicating that we have now started to control the outbreak.
 
 ### Per Country
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
-covid_instant_r %>% 
-  filter(date > ymd("2020-03-01")) %>%
-  gg_effective_repro_facet()  + 
+gg_effective_repro_facet(covid_instant_r)  + 
+  facet_wrap(~reorder(country_region, -total_cases)) +
   theme(panel.grid.minor = element_blank())
 ```
 
 ***
 
-Some good, some bad.
+This is the same information presented as in the previous graphic, but with each country split into its own graph. This allows us to see the trajectory of effective R. 
+
+Most countries are decreasing, but we notice that Japan and Singapore are fluctuating, due to recent outbreaks.
 
 ### Per Country (ribbons)
 
 ```{r gg-effective-r-facet-ribbon, fig.height = 8, fig.width = 12}
-covid_instant_r %>% 
-  gg_effective_repro_facet()  + 
+  gg_effective_repro_facet(covid_instant_r)  + 
+  facet_wrap(~reorder(country_region, -total_cases)) +
   geom_ribbon(aes(ymin = quantile_0_025_r,
                   ymax = quantile_0_975_r),
               alpha = 0.1,
@@ -346,7 +355,36 @@ covid_instant_r %>%
 
 ***
 
-Tie a yellow riboon...
+This shows the uncertainty around the estimate of the effective R. We notice that as time goes on, there is less uncertainty around the estimate, so we can more confident in our estimate at these later times.
+
+
+### Difference from 1
+
+```{r effective-one, fig.height = 8, fig.width = 12}
+
+covid_instant_r_diff_1 <- covid_instant_r %>% 
+  arrange(country_region, date)  %>% 
+  group_by(country_region) %>% 
+  mutate(one_diff = 1 - median_r)  %>% 
+  ungroup()
+
+  ggplot(covid_instant_r_diff_1,
+         aes(x = date,
+             y = one_diff,
+             colour = country_region)) + 
+  geom_line() +
+    facet_wrap(~reorder(country_region, -total_cases)) +
+    theme_minimal() + 
+    theme(legend.position = "none")  +
+    geom_hline(yintercept = 0, colour = "red") + 
+  labs(title = "Distance from Effective R of 1",
+       subtitle = "Above 0 is better, below zero is worse")
+```
+
+***
+
+We can take these graphics and look at how different they are from 1, which indicates that an outbreak is under control.
+
 
 
 $R_{t}$ for NSW {.storyboard}

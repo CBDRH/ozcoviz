@@ -386,6 +386,137 @@ covid_instant_r_diff_1 <- covid_instant_r %>%
 We can take these graphics and look at how different they are from 1, which indicates that an outbreak is under control.
 
 
+### Australia
+
+```{r this-is-australia}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Australia")
+```
+
+***
+
+
+
+### Japan
+
+```{r this-is-japan}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Japan")
+```
+
+***
+
+Cool!
+
+### South Korea
+
+```{r this-is-south-krea}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "South Korea")
+```
+
+***
+
+Cool!
+
+### China
+
+```{r this-is-china}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "China")
+```
+
+***
+
+Cool!
+
+### Germany
+
+```{r this-is-germany}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Germany")
+```
+
+***
+
+Cool!
+
+### Spain
+
+```{r this-is-spain}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Spain")
+```
+
+***
+
+Cool!
+
+### France
+
+```{r this-is-france}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "France")
+```
+
+***
+
+Cool!
+
+### Italy
+
+```{r this-is-italy}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Italy")
+```
+
+***
+
+Cool!
+
+### Singapore
+
+```{r this-is-singapore}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Singapore")
+```
+
+***
+
+Cool!
+
+### United Kingdom
+
+```{r this-is-uk}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "UK")
+```
+
+***
+
+Cool!
+
+### USA
+
+```{r this-is-usa}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "USA")
+```
+
+***
+
+Cool!
 
 $R_{t}$ for NSW {.storyboard}
 =======================================================================

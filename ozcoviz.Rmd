@@ -114,7 +114,7 @@ Column  {.tabset}
 
 ### Introduction
 
-This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Economics and Business Statistics Research Unit](https://research.monash.edu/en/organisations/econometrics-business-statistics) in the the [Monash University Faculty of Business & Economics](https://research.monash.edu/en/organisations/faculty-of-business-economics), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
+This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Econometrics and Business Statistics Research Group](https://research.monash.edu/en/organisations/econometrics-business-statistics) of [Monash University](https://www.monash.edu/), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
 
 ```{r, out.width="20%", fig.show='hold', out.extra='style="padding:25px"'}
 knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
@@ -133,16 +133,15 @@ The broad themes for the analyses and visualisations currently available are lis
 
 #### An Australian focus with an international perspective
 
-This site has been created by researchers at Australian universities, and hence the focus is on the situation in Australia, within the broader international context -- we are, after all, all in this together. However, we hope that some of the analyses and visualisations on this site might be useful elsewhere, and to that end, all the [`R`](https://www.r-project.org) source code used to create this site if freely available -- please see the _Technical details_ tab above. 
+This site has been created by researchers at Australian universities, and hence the focus is on the situation in Australia, within the broader international context -- we are, after all, all in this together. However, we hope that some of the analyses and visualisations on this site might be useful elsewhere, and to that end, all the [`R`](https://www.r-project.org) source code used to create this site if freely available -- please see the _Technical details_ tab above for details on software used, and where to find the source code. 
 
 ### Contributors
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />The content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. If you wish to re-use any of the content, please retain the attribution which appears on each chart or set of charts, or otherwise provide that attribution alongside the content that you re-use.
 
+In turn, we acknowledge [RECON](https://www.repidemicsconsortium.org/) for providing financial support, and [European Centre for Disease Control](https://www.ecdc.europa.eu/en) who have provided [up to date data](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide) on the COVID19 pandemic.
 
-In turn, we acknowledge RECON, and EuroCDC
-
-Project has been led by [Timothy Churches](), [Nicholas Tierney](), with thanks to [Stuart Lee](), [Dianne Cook](), and [Miles McBain]()
+Project has been led by [Timothy Churches](https://timchurches.github.io/blog/about.html), [Nicholas Tierney](https://www.njtierney.com/), with thanks to [Stuart Lee](https://stuartlee.org/), [Dianne Cook](http://dicook.org/), [Miles McBain](https://github.com/MilesMcBain), and [Rob Hyndman](https://robjhyndman.com/)
 
 Visualisations and analysis made available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
 
@@ -150,9 +149,7 @@ Source code for this visualisation are available at [covid-flexdashboard](https:
 
 ### Technical Details
 
-Data Analysis has been entirely created within the [R programming language](), and [Rstudio]()
-
-The dashboard can be entirely recreated using the open source code provided at [github]()
+Data Analysis has been entirely created within the [R programming language](https://cran.r-project.org/) using [Rstudio](https://rstudio.com/).
 
 Packages used include:
 
@@ -181,7 +178,7 @@ Incidence {.storyboard}
 
 **Case Incidence**
 
-This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
+This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
 
 ### Cumulative Incidence for selected countries
 
@@ -202,7 +199,11 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
 
 ***
 
-Blah blah.
+This graphic shows the cumulative cases of COVID19 for selected countries, against the number of days since a country exceeded 100 cumulative cases.
+
+Note that Australia the curve is starting to flatten, as we have had fewer cases per day. 
+
+Although Australia does not have the same level of control over cases as countries like Japan and Singapore, it seems that the measures the Australian government have taken to limit travelers, and enforce physical distancing are working.
 
 ### Australian incidence
 
@@ -236,7 +237,9 @@ gg_cases
 
 ***
 
-Blah blah b;ah.
+The number of cases per day recorded in Australia, as provided by the European CDC.
+
+We note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is recording Australia's data. Until Australia releases our own records publicly, this is the best that we can do.
 
 ### Australian incidence (semi-log)
 
@@ -251,46 +254,43 @@ gg_cases +
 
 ***
 
-Such is life.
-
 National-level $R_{t}$ {.storyboard}
 =======================================================================
 
-
 ### Explanation
 
-To understand the spread of COVID19, we can look at a statistic called "R0" (R-nought). This is the number of people we expect to be infected if one COVID19 infected person arrives, and can spread it.
+To understand the spread of COVID19, we use a statistic called "R0" (R-nought). This is the number of people we expect to be infected from one COVID19 infected person arriving in a population.
 
-The R0 is the number of people we expect are directly caused by the spread of this one person. 
+We are estimating R0 from the available data, and are specifically estimating the **effective reproduction number** (different to basic reproduction number). This reflects the current state of a population, which may include some infections. 
 
-The effective reproduction number (different to basic reproduction number) reflects the current state of a population, which may include some infections. 
+**What does R0 mean?**
 
-This is what we are estimating.
+**If R0 is 1**
 
-**What does this mean?**
+- One person arriving to a population could spread it to one other person. Those people could then spread it to one other person. This is easier to manage. 
 
-If the R0 number is 1, this means that one person arriving to a population could spread it to one other person. Those people could then spread it to one other person. This is easier to manage. 
+**If R0 is 0.3**
 
-If R0 is 0.3, then for every 10 people infected, it would spread to 3 other people.
+- For every 10 people infected, it would spread to 3 other people.
 
-Both of these are good cases.
+**If R0 is 2**
 
-Now, some bad cases.
+- Every person arriving in the population can infect 2 more people. This can quickly get out of control.
 
-If the R0 number is 2, this means that every person arriving in the population can infect 2 more people. This can quickly get out of control.
+**What do we want R0 to be?**
 
-We want the R0 to be below 1, and ideally as close to 0 as possible.
+- We want the R0 to be below 1, and ideally as close to 0 as possible.
 
 **Estimating Effective reproduction number**
 
-We estimate the effective reproduction number using mathematical modelling. This means that the estimated numbers are dependent upon the mathematical model, and while they are our best possible guess at R0, they could be inaccurate.
+We estimate the effective reproduction number using mathematical modelling. This means that the estimated numbers are dependent upon the mathematical model, and while they are our best possible guess at R0, they may be some inaccuracies.
 
 These estimates reflect the number of new cases we expect from an infected person as they interact with a population. The higher the number, the worse the control of the infection, and the more people will be infected. We want this number to be below 1, and preferably as close to 0 as possible.
 
-
 **Misconceptions / mistakes**
 
-It is not a rate, and has no units of time.
+R0 is not a rate, and has no units of time.
+
 This means it is not a rate of infection, and does not tell us how fast an infection spreads.
 
 **Limitations**

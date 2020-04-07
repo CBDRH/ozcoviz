@@ -357,35 +357,6 @@ Most countries are decreasing, but we notice that Japan and Singapore are fluctu
 
 This shows the uncertainty around the estimate of the effective R. We notice that as time goes on, there is less uncertainty around the estimate, so we can more confident in our estimate at these later times.
 
-
-### Difference from 1
-
-```{r effective-one, fig.height = 8, fig.width = 12}
-
-covid_instant_r_diff_1 <- covid_instant_r %>% 
-  arrange(country_region, date)  %>% 
-  group_by(country_region) %>% 
-  mutate(one_diff = 1 - median_r)  %>% 
-  ungroup()
-
-  ggplot(covid_instant_r_diff_1,
-         aes(x = date,
-             y = one_diff,
-             colour = country_region)) + 
-  geom_line() +
-    facet_wrap(~reorder(country_region, -total_cases)) +
-    theme_minimal() + 
-    theme(legend.position = "none")  +
-    geom_hline(yintercept = 0, colour = "red") + 
-  labs(title = "Distance from Effective R of 1",
-       subtitle = "Above 0 is better, below zero is worse")
-```
-
-***
-
-We can take these graphics and look at how different they are from 1, which indicates that an outbreak is under control.
-
-
 ### Australia
 
 ```{r this-is-australia}
@@ -415,7 +386,7 @@ Cool!
 ```{r this-is-south-krea}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
                                        covid,
-                                       "South Korea")
+                                       "South_Korea")
 ```
 
 ***

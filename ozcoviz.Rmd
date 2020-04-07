@@ -1,5 +1,5 @@
 ---
-title: "CoViz"
+title: "OzCoViz"
 date: "`r lubridate::now()`"
 output:
   flexdashboard::flex_dashboard:
@@ -93,14 +93,14 @@ maxpos <- which(vals == max(vals))
 if (all(vals[maxpos] > vals[18:25])) {
   fig(datafy(values = vals, 
              text = "oz covid19 visualisations", 
-             ignore_space = FALSE), 
+             ignore_space = TRUE), 
       size=60,
       symbol = setNames(c(maxpos, 18:24), 
                         c("max", rep("down",7))))
 } else {
   fig(datafy(values = vals, 
              text = "oz covid19 visualisations", 
-             ignore_space = FALSE), 
+             ignore_space = TRUE), 
       size = 60,
       symbol = setNames(c(maxpos, 18:24), 
                         c("max", rep("up",7))))
@@ -243,9 +243,9 @@ gg_cases +
 
 The number of cases per day recorded in Australia, as provided by the European CDC.
 
-We note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is recording Australia's data. Until Australia releases our own records publicly, this is the best that we can do.
+We note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is capturing data from WHO Situation Reports. It underlines the importance of nations providing reliable machine-readable access to their own COVID-19 data. By "machine-readable" we mean CSV or JSON data files which are automatically downlaodable, or an API which can be queried automatically to yield such data. Neither of those are difficult to establish, yet nearly all national governments have failed to provide such data, leaving it to third-party agencies abd citizen-science efforts to piece together the required data in a manner that permits ongoing analysis. There is, for example, no official machine-readable source of national COVID-19 data provided by the Australian government. NSW Health is the only State or Territory government that has made any effort in that direction by providing some machine-readable data, which we leverage in the $R_{t}$ _for NSW_ theme (see menu above).  
 
-### Daily Global Incidence (free scales)
+### Daily Global Incidence (fixed y-axis scale)
 
 ```{r world-incidence-free-scales, fig.height = 8, fig.width = 12}
 gg_cases + 

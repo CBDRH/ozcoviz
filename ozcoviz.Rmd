@@ -78,7 +78,7 @@ source("nsw_eff_R_data_and_plot_prep.R")
 Overview
 =======================================================================
 
-```{rdatalegreyar, fig.align='center'}
+```{r datalegreyar, fig.align='center'}
 # this just takes the last 21 days of Australian data, Ideally it should show the 
 # whole history of Australian data since, say 1st March 2020
 
@@ -129,7 +129,7 @@ knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
 
 The intent is to offer a range of principled epidemiological and statistical analyses and visualisations of current COVID-19 data which go beyond the now ubiquitous [world maps and cumulative incidence charts](https://coronavirus.jhu.edu/map.html). 
 
-The broad themes for the analyses and visualisation currently available are listed in the menu at the top of this page -- more will be added in due course. For each theme there is an introductory page explaining the motivating ideas and methodology employed for each visualisation or analysis, which are available on the subsequent tabs or frames (the series of rectangles at the top of each page) for that theme. Additional notes or commentary appear on the right of some pages.
+The broad themes for the analyses and visualisations currently available are listed in the menu at the top of this page -- more will be added in due course. For each theme there is an introductory page explaining the motivating ideas and methodology employed for each of the visualisations or analyses for that theme, which are available in the subsequent frames (the series of rectangles at the top of each page). Additional notes or commentary appear on the right of some pages.
 
 #### An Australian focus with an international perspective
 

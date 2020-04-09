@@ -7,5 +7,4 @@ index_cache
 .nishiura_si_dist/
 */*_cache/
 docs/*_files/
-docs/*.html
 .DS_Store

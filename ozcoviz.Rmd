@@ -177,9 +177,28 @@ Incidence {.storyboard}
 
 ### Explanation
 
-**Case Incidence**
+Incidence is the epidemiological term for the number of cases of a disease meeting some case definition in a specified time period. Here we present the daily incidence -- that is, the number of new cases each day -- of COVID-19 for a range of countries, including Australia, of course. Each country may be using a slightly different case definition, although most of the countries presented here have been using case definitions aligned with those [recommended by the WHO](https://www.who.int/publications-detail/global-surveillance-for-human-infection-with-novel-coronavirus-(2019-ncov)). Three types of case definition are used, simultaneously:
 
-This presents the daily number of cumulative cases, and daily cases of COVID19 for selected countries around the world. The data is drawn from the [European CDC](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide), which has collected data from various governing agencies around the world. There are some small discrepancies between this data and that given by the official Australian government results, but in the absence of up to date easily obtainable data from Australia, this is the highest quality data that we have.
+* **Suspected cases**
+* **Probable cases**
+* **Confirmed (by laboratory test) cases**
+
+All of the data reported here are for **confirmed cases**, with a few exceptions (China included cases diagnosed via lung CT scan for a few days in Februrary, 20020, but we have adjusted the data for those days as far as possible to remove that anomaly.
+
+The data are drawn from the [European CDC](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide), which has collected data from various governing agencies around the world. There are some small discrepancies between these data and those given by the Australian government, and indeed other national governemnst, due to timing issues relating to when cases are tabulated each day, and so on. However, we ebelive the the European CDC to be teh best source of automatically downloadable, machine-readable data there is right now.
+
+Note, however, that because the **confirmed** case definition depends on laboratory confirmation, it is influenced by the number of lab tests (RT-PCR, reverse transcriptase polymerase chain reaction tests on nasopharyngeal swabs or sputum) done by each reporting country or jurisdiction. Obviously the number of reported cases is bounded by the number of such labs tests which are done, but the degree of under-ascertainment is also affected by the policies in place which determine which potential COVID-19 cases are tested. These policies are completely country-specific and have changed over time.
+
+Another issue with these data is that it is vastly preferrable to analyse incidence by (presumed or definite) date of onset of symptoms, rather than by date of notification or date of reporting. Theer may be variable delays in the processing of laboratory tests and the reporting of cases to central authorities. Tabulation of incidence counts by date of onset overcomes this problem. Almost all national and jurisdictional health authorities will be collecting data on presumed date of onset for each case (although, inexplicably, it is **not** one of the data items on the [WHO-recommended data collection form](https://apps.who.int/iris/bitstream/handle/10665/331234/WHO-2019-nCoV-SurveillanceCRF-2020.2-eng.pdf)). One reason for not using date of onset is that it may be incomplete, but this ignores the fact that statistical imputation can be used to validly fill in those missing dates of onset. There are also a body of methods, collectively known as _nowcasting_, that use multivariate time-series models to convert data tabulated by date of notification/reporting to (estimated) date of onset. If national or jurisdictional health authorities do not have the technical capacity to undertake such value-adding to their own data, they should make the required data available to trusted partners in the academic sector who can undertake such statistical manipulation for them (or help authorities implement such processing internally).
+
+** Cumulative Incidence**
+
+Cumulative incidence is, as the name suggests, just the cumulative sum of the daily incidence - that is, a running total of the number of cases. Reporting of cumulative COVID-19 seems to dominate the mainstream media, but it has many disadvantages. In particular, a cumulative sum of case counts is always monotonically increasing -- it can only ever go up, or at best, remain flat if there are no new incident cases. This tends to obscure the rate of chnage in incidence over time -- subtle, or even large changes in the slope of the cumulative incidence curve are difficult to see. 
+
+** Semi-log cumulative incidence chart **
+
+The first chart presented here is a semi-log cumulative inncidence chart. This chart seems to have been popularised by [John Burn-Murdoch](https://twitter.com/jburnmurdoch) in the [Financial Times](https://www.ft.com/coronavirus-latest), but it appears it was [first used by Matt Cowgill](https://blog.grattan.edu.au/2020/03/australian-governments-can-choose-to-slow-the-spread-of-coronavirus-but-they-must-act-immediately/) from Australia's very own [Grattan Institute](https://blog.grattan.edu.au). It has since been widely copied and reproduced. Please see a [blog post by Prof Rob Hyndman](https://robjhyndman.com/hyndsight/logratios-covid19/) for further discussion of this chart, and some alternative analyses (one of which we also reproduce in the section on time-varying effective reproduction numbers ($R_{t}$).
+
 
 ### Cumulative Incidence for selected countries
 
@@ -200,11 +219,12 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
 
 ***
 
-This graphic shows the cumulative cases of COVID19 for selected countries, against the number of days since a country exceeded 100 cumulative cases.
+This graphic shows the cumulative cases of COVID-19 for selected countries on a logarithmic scale, with the number of days since each country shown exceeded 100 cumulative cases.
 
-Note that Australia the curve is starting to flatten, as we have had fewer cases per day. 
+Note that as countries "peel off" the diagonal trajectory, it means their rate of new (incident) cases is reducing. If the line for a country is horizontal, it means there are no new cases occuring there.
 
-Although Australia does not have the same level of control over cases as countries like Japan and Singapore, it seems that the measures the Australian government have taken to limit travelers, and enforce physical distancing are working.
+The curve for Australia is clearly flattening, and we are keeping good company with China, South Korea and New Zealand as the other countries with nearly horizontal trajectories. Note that after connsiderable initial success in containing COVID-19 spread, both Japan and Singapore are no on a upwards trajectory, bu the slopes of those trajectories are much shallower than the other countries shown.
+
 
 ### Daily Global Incidence
 

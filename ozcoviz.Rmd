@@ -376,39 +376,41 @@ National-level $R_{t}$ {.storyboard}
 
 ### Explanation
 
-To understand the spread of COVID19, we use a statistic called "R0" (R-nought). This is the number of people we expect to be infected from one COVID19 infected person arriving in a population.
+A key statistic in field epidemiology is the _basic reproduction number_, often referred to as "R-zero" or "R-nought", and written $R_{0}$. This is the number of people we expect each new case of a disease such as COVID-10 to infect -- in other words, how many people each case passes the disease on to -- at the **beginning** of a disease outbreak or epidemic, **before** any public health controls or interventions have been established or put in place. 
 
-We are estimating R0 from the available data, and are specifically estimating the **effective reproduction number** (different to basic reproduction number). This reflects the current state of a population, which may include some infections. 
+$R_{0}$ was popularised in the 2011 film _Contagion_. Here is Gwyneth Paltrow, who plays a US CDC epidemiologist, explaining $R_{0}$ (with a few errors -- it's _reproduction number_, not "reproductive rate" as she say) to government officials: 
 
-**What does R0 mean?**
+<iframe width="560" height="315" align="center" src="https://www.youtube.com/embed/VrATMF_FB9M" frameborder="0" allowfullscreen></iframe>
+<br>
 
-**If R0 is 1**
+As explained in the film clip above, $R_{0}$ is determined by a number of factors, but is a very useful metric of how fast a communicable disease will spread in a population, if **nothing is done** to stop or slow it. Note that $R_{0}$ is **not** solely a characteristic of a pathogen (such as a virus) _per se_, but rather depends on the nature and biological behaviour of the pathogen, but also how it is transmitted, who often members of teh population engage in behaviours that may transmit it, population density, whetheher any members of teh population are immune or resistant to the disease, and so on. In other words, $R_{0}$ is highly situation-specific.
 
-- One person arriving to a population could spread it to one other person. Those people could then spread it to one other person. This is easier to manage. 
+As such, $R_{0}$ is useful in the early stages of an epidemic, but as soon as (effective) public health interventions have been put in place to slow the spread of the disease, the reproduction number will change. This metric is referred to as the _effective reproduction number_, denoted $R_{t}$, where $t$ stands for time. In other words, $R_{t}$ is the reproduction number at a particular point in time, $t$.
 
-**If R0 is 0.3**
+#### What are the implications of the _effective reproduction number_?
 
-- For every 10 people infected, it would spread to 3 other people.
+** If $R_{t}$ equals 1.0**
 
-**If R0 is 2**
+- Each infected person spreads the disease, on average, to one other person during the course of their illness (which ends when they either recover or die). Therefore, in the long-run, the number of infected people neither grows nor shrinks. Fron day-to-day there may be some variation, but overall the number of new infections stays the same. 
 
-- Every person arriving in the population can infect 2 more people. This can quickly get out of control.
+**If $R_{t}$ is greater than 1.0**
 
-**What do we want R0 to be?**
+- Each infected person spreads the disease, on average, to more than one other person during the course of their illness. Each of those spread the disease to more than one additional people, and so on. It is easy to see that this results in a growing number of new infections each day, and that growth rate itself also grows -- the so-called exponential growth of an epidemic (at least in its early stages). If $R_{0}$ initially, or $R_{t}$, later, is only just greater than 1.0, then the disease spreads only slowly,but is the _reproduction number_ is well above 1.0, say, 2.0 or more, then rapid spread results. 
 
-- We want the R0 to be below 1, and ideally as close to 0 as possible.
+**If $R_{t}$ is less than 1.0**
 
-**Estimating Effective reproduction number**
+- Each infected person spreads the disease, on average, to fewer than one other person during the course of their illness (obviously each person spreads it to a whole number of other people eg zero, one, two, three, but _on average_, taken across a large number of infected individuals, the number infected by each person with the disease is less than one. Again, it is easy to see that this results in a falling number of new infections each day, and that rate of decay in the number of new infections also decays -- in other words, epidemics decay exponentially too. As an aisde, just a epidemics tend to grow much more quickly than most people expect -- humans tend to reason using linear heuristics -- so do epidemics decay much more **slowly** that people expect, for the same reason -- humans assume linear behaviour, which does not (necessarily) apply to communicable disease dynamics.  
 
-We estimate the effective reproduction number using mathematical modelling. This means that the estimated numbers are dependent upon the mathematical model, and while they are our best possible guess at R0, they may be some inaccuracies.
+
+#### Estimating the time-varying _effective reproduction number_ $R_{t}$
+
+We estimate the _effective reproduction number_ $R_{t}$ using a statistical model which was developed in 2013 by Anne Cori and colleagues at Imperial College London (ICL), as described in [ref]. The method was later extended by Thompson and colleagues (including Anne Cori), also at ICL, as described in [ref]. We won't go into the details of the model here -- they are described in details in the cited papers -- but we will remark on a few key points that need to be born in mind when interpreting these statistics. 
+
+The first is that the methods we use here estimate the **instantaneous** effective reporoduction number, which is...
+
+The second point to bear in mind is that the _reproduction number_ is an estimate of the spread of an infection is a specific, local population, and thus we should only use counts of incident (new) infections which result from local spread when estimating it, and (UP TO HERE) 
 
 These estimates reflect the number of new cases we expect from an infected person as they interact with a population. The higher the number, the worse the control of the infection, and the more people will be infected. We want this number to be below 1, and preferably as close to 0 as possible.
-
-**Misconceptions / mistakes**
-
-R0 is not a rate, and has no units of time.
-
-This means it is not a rate of infection, and does not tell us how fast an infection spreads.
 
 **Limitations**
 

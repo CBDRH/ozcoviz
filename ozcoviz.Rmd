@@ -1,6 +1,6 @@
 ---
 title: "OzCoViz"
-date: "`r lubridate::now()`"
+date: "`r paste('last updated', format(lubridate::now(), '%H:%M, %d %B %Y'))`"
 output:
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -86,24 +86,24 @@ Overview
 vals <- covid %>%
           filter(country_region == "Australia") %>%
           arrange(date) %>%
-          top_n(25, wt = row_number()) %>%
+          top_n(26, wt = row_number()) %>%
           pull(cases)
 
 maxpos <- which(vals == max(vals))
-if (all(vals[maxpos] > vals[18:25])) {
+if (all(vals[maxpos] > vals[18:26])) {
   fig(datafy(values = vals, 
-             text = "oz covid19 visualisations", 
+             text = "oz covid 19 visualisations", 
              ignore_space = TRUE), 
       size=60,
-      symbol = setNames(c(maxpos, 18:24), 
-                        c("max", rep("down",7))))
+      symbol = setNames(c(maxpos, 18:25), 
+                        c("max", rep("down",8))))
 } else {
   fig(datafy(values = vals, 
-             text = "oz covid19 visualisations", 
+             text = "oz covid 19 visualisations", 
              ignore_space = TRUE), 
       size = 60,
-      symbol = setNames(c(maxpos, 18:24), 
-                        c("max", rep("up",7))))
+      symbol = setNames(c(maxpos, 18:54), 
+                        c("max", rep("up",8))))
 }
     
 ```
@@ -191,16 +191,27 @@ Note, however, that because the **confirmed** case definition depends on laborat
 
 Another issue with these data is that it is vastly preferrable to analyse incidence by (presumed or definite) date of onset of symptoms, rather than by date of notification or date of reporting. Theer may be variable delays in the processing of laboratory tests and the reporting of cases to central authorities. Tabulation of incidence counts by date of onset overcomes this problem. Almost all national and jurisdictional health authorities will be collecting data on presumed date of onset for each case (although, inexplicably, it is **not** one of the data items on the [WHO-recommended data collection form](https://apps.who.int/iris/bitstream/handle/10665/331234/WHO-2019-nCoV-SurveillanceCRF-2020.2-eng.pdf)). One reason for not using date of onset is that it may be incomplete, but this ignores the fact that statistical imputation can be used to validly fill in those missing dates of onset. There are also a body of methods, collectively known as _nowcasting_, that use multivariate time-series models to convert data tabulated by date of notification/reporting to (estimated) date of onset. If national or jurisdictional health authorities do not have the technical capacity to undertake such value-adding to their own data, they should make the required data available to trusted partners in the academic sector who can undertake such statistical manipulation for them (or help authorities implement such processing internally).
 
-** Cumulative Incidence**
+#### Cumulative Incidence
 
 Cumulative incidence is, as the name suggests, just the cumulative sum of the daily incidence - that is, a running total of the number of cases. Reporting of cumulative COVID-19 seems to dominate the mainstream media, but it has many disadvantages. In particular, a cumulative sum of case counts is always monotonically increasing -- it can only ever go up, or at best, remain flat if there are no new incident cases. This tends to obscure the rate of chnage in incidence over time -- subtle, or even large changes in the slope of the cumulative incidence curve are difficult to see. 
 
-** Semi-log cumulative incidence chart **
+#### Semi-log cumulative incidence chart
 
 The first chart presented here is a semi-log cumulative inncidence chart. This chart seems to have been popularised by [John Burn-Murdoch](https://twitter.com/jburnmurdoch) in the [Financial Times](https://www.ft.com/coronavirus-latest), but it appears it was [first used by Matt Cowgill](https://blog.grattan.edu.au/2020/03/australian-governments-can-choose-to-slow-the-spread-of-coronavirus-but-they-must-act-immediately/) from Australia's very own [Grattan Institute](https://blog.grattan.edu.au). It has since been widely copied and reproduced. Please see a [blog post by Prof Rob Hyndman](https://robjhyndman.com/hyndsight/logratios-covid19/) for further discussion of this chart, and some alternative analyses (one of which we also reproduce in the section on time-varying effective reproduction numbers ($R_{t}$).
 
+There are several variations on the _Grattan+ chart presented, please see the notes for each one.
 
-### Cumulative Incidence for selected countries
+#### _Epicurves_
+
+The _epicurve_ is perhaps the most-used chart in field epidemiology and outbreak control. It is simply a chart of daily (or weekly, for slower-moving diseases) incidence (new cases), traditionally shown as a bar chart. It gives an immediate sense of whether an outbreak or epidemic is in a growth phase, with increasing incident counts each successive day, or in a decay phase, with decreasing counts each successive day. Note that the cumulative count will still increase, day-on-day, even when an outbreak or epidemic is in a decay phase. Only when the epidemic has been completely extinguished will the cumulative incidence stop increasing. That's one of the reasons why cumulative incidence charts are rarely used by epidemiologists.
+
+Three variations of _epicurves_ are provided here: 
+
+* the usual _epicurve_, on a linear y-axis, and with the ranges specific for each country to maximise the amount of detail discernable
+* the same chart, but with a logarithmic y-axis, which allows the periods with lower counts to be inspected in greater detail;
+* the usual _epicurve_, on a linear y-axis, but with the same y-axis scale across all countries, which clearly shows the relative incidence in each country. This chart is quite startling.
+
+### Semi-log **cumulative incidence** for selected countries -- the _Grattan Institute_ chart
 
 ```{r since-100}
 covid_since_100 <- covid %>% 
@@ -219,66 +230,146 @@ gg_covid_cumulative_exceed_limit(covid_since_100,
 
 ***
 
-This graphic shows the cumulative cases of COVID-19 for selected countries on a logarithmic scale, with the number of days since each country shown exceeded 100 cumulative cases.
+This chart shows the cumulative cases of COVID-19 for selected countries on a logarithmic y-axis scale, with the dates on the x-axis converted to the number of days since each country shown exceeded 100 cumulative cases, on a linear x-axis scale (hence the name _semi-log_, since only one of the two axes is logarithmic).
 
-Note that as countries "peel off" the diagonal trajectory, it means their rate of new (incident) cases is reducing. If the line for a country is horizontal, it means there are no new cases occuring there.
+Note that countries "peel off" the diagonal trajectory as their rate of new (incident) cases reduces. If the line for a country is horizontal, it means there are no new cases occurring there.
 
-The curve for Australia is clearly flattening, and we are keeping good company with China, South Korea and New Zealand as the other countries with nearly horizontal trajectories. Note that after connsiderable initial success in containing COVID-19 spread, both Japan and Singapore are no on a upwards trajectory, bu the slopes of those trajectories are much shallower than the other countries shown.
+The curve for Australia is clearly flattening, and we are keeping good company with China, South Korea and New Zealand as the other countries with nearly horizontal trajectories. Note that after considerable initial success in containing COVID-19 spread, both Japan and Singapore are now on a upwards trajectory, but the slopes of those trajectories are much shallower than the other countries shown, indicating much slower spread in those countries.
+
+### Semi-log **cumulative incidence** for selected countries -- aligned to start of epidemic in each country
+
+```{r since-cp}
+covid_since_changepoint <- covid %>% 
+  add_covid_change_point() %>%
+  rename(days_since_limit = days_since_changepoint) %>% 
+  filter(days_since_limit >= 0)
+```
+
+```{r gg-cumulative-incidence-since-cp, fig.height = 8, fig.width = 12}
+gg_covid_cumulative_exceed_limit(covid_since_changepoint,
+                                 limit = NULL) + 
+  theme(panel.grid.minor = element_blank())  +
+  scale_colour_hue()
+```
+
+***
+
+This chart is a variation on the previous _Grattan Institute_ chart. It isn't really an improvement on the _Grattan_ chart, but is shown here to illustrate the sensitivity of the _Grattan_ chart to the method used to align the dates on the x-axis. In the chart shown at left, the dates on the x-axis are aligned to the approximate start of the COVID-19 epidemic in each country. The start dates are chosen automatically using a non-parametric changepoint detection algorithm, (see the [`changepoint.np` package](https://CRAN.R-project.org/package=changepoint.np ) for `R`). The changepoints for each country shown are as follows:
+
+```{r cp-table}
+covid_since_changepoint %>%
+  distinct(country_region, change_point_date) %>%
+  arrange(change_point_date) %>%
+  mutate(country_region = stringr::str_replace_all(country_region,
+                                                    pattern = "_",
+                                                    replacement = " ")) %>%
+  knitr::kable(col.names=c("Country", "Detected start of epidemic"))
+```
+
+### Semi-log daily **incidence** for selected countries -- aligned to start of epidemic in each country
+
+```{r gg-incidence-since-cp, fig.height = 8, fig.width = 12}
+gg_covid_incidence_exceed_limit(covid_since_changepoint,
+                                 limit = NULL) + 
+  theme(panel.grid.minor = element_blank())  +
+  scale_colour_hue() +
+  scale_y_log10(labels = scales::comma_format(accuracy=1))
+  
+```
+
+***
+
+This is another variation on the _Grattan Institute_ chart, but this time showing daily incidence on the y-axis, rather than daily **cumulative** incidence. It is basically the same information as shown in the _epicurve_ charts in the subsequent frames (accessed via the blue rectangles at the top of the page), but all of the selected countries are shown on one plot, and the dates are aligned by the detected start of the epidemic in each country.
+
+One problem is that the daily incidence curves are rather noisy. We can address that by smoothing them, as shown in the next frame.
+
+### Semi-log **smoothed** daily **incidence** for selected countries -- aligned to start of epidemic in each country
+
+```{r gg-incidence-since-cp-smoothed, fig.height = 8, fig.width = 12}
+gg_covid_incidence_exceed_limit(covid_since_changepoint,
+                                 limit = NULL,
+                                 smooth=TRUE,
+                                 span=0.2) + 
+  theme(panel.grid.minor = element_blank())  +
+  scale_colour_hue() +
+  scale_y_log10(labels = scales::comma_format(accuracy=1))
+
+```
+
+***
+In this chart, we can now discern three distinct groups of countries:
+
+* an upper group of just one, the USA, where the epidemic is still growing rapidly.
+* a middle group comprising the UK and European countries
+* a lower group, which includes Australia , New Zealand, South Korea, China, Japan and Singapore, which all have their local COVID-19 epidemics under control (but definitely not eradicated). Note however that Japan and Singapore are now exiting that lower group and heading upwards.
 
 
-### Daily Global Incidence
+### _Epicurves_ for selected countries
 
 ```{r global-cases, fig.height = 8, fig.width = 12}
 
-covid_since_100_w_total <- covid_since_100 %>% 
+covid_since_changepoint_w_total <- covid_changepoint %>% # was:  covid_since_100
   group_by(country_region) %>% 
   mutate(total_cases = sum(cases))
 
-covid_since_100_w_total_labels <- slice(covid_since_100_w_total, 1) 
+covid_since_changepoint_w_total_labels <- slice(covid_since_changepoint_w_total, 1) 
 
-gg_cases <-  ggplot(covid_since_100_w_total,
+gg_cases <-  ggplot(covid_since_changepoint_w_total,
                     aes(x = date,
                         y = cases,
                         fill = country_region)) + 
   geom_col() + 
   theme_minimal() +
   theme(legend.position = "none") +
-  labs(title = "Daily number of COVID19 cases for each country",
-       x = "Date since cumulative cases exceeded 100",
-       y = "New Cases",
-       caption = "CC BY-NC-SA
-               Tim Churches (UNSW)
-               Nick Tierney (Monash)
-               Data source: European CDC") +
-  scale_x_datetime(date_labels = "%b %d")
+  labs(title = "COVID-19 epicurves for confirmed incident cases for selected countries",
+       subtitle = glue::glue("Up to  {format(max(covid_changepoint$date), '%d %b %Y')}"),
+       x = "Date",
+       y = "Incident cases",
+       caption = glue::glue("Tim Churches (UNSW) & Nick Tierney (Monash)
+                  Data source: European CDC up to {format(max(covid_since_changepoint_w_total$date),'%d %b %Y')}")) +
+  scale_x_datetime(date_labels = "%d %b")
 
 gg_cases + 
     facet_wrap(~reorder(country_region, -total_cases),
                scales = "free") +
-  labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith Y scale freely fit to match data for each country")
+  labs(subtitle = "Arranged from highest to smallest cumulative incidence.\nNote: both x-axis and y-axis scales are different for each country")
   
 ```
 
 ***
 
-The number of cases per day recorded in Australia, as provided by the European CDC.
+The charts shown here are _epicurves_ -- that is, daily count of incident (new) cases, using data collated by the European CDC.
 
-We note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is capturing data from WHO Situation Reports. It underlines the importance of nations providing reliable machine-readable access to their own COVID-19 data. By "machine-readable" we mean CSV or JSON data files which are automatically downlaodable, or an API which can be queried automatically to yield such data. Neither of those are difficult to establish, yet nearly all national governments have failed to provide such data, leaving it to third-party agencies abd citizen-science efforts to piece together the required data in a manner that permits ongoing analysis. There is, for example, no official machine-readable source of national COVID-19 data provided by the Australian government. NSW Health is the only State or Territory government that has made any effort in that direction by providing some machine-readable data, which we leverage in the $R_{t}$ _for NSW_ theme (see menu above).  
+Note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is capturing data from WHO Situation Reports. It underlines the importance of nations providing reliable machine-readable access to their own COVID-19 data. By "machine-readable" we mean CSV or JSON data files which are automatically downlaodable, or an API which can be queried automatically to yield such data. Neither of those are difficult to establish, yet nearly all national governments have failed to provide such data, leaving it to third-party agencies and citizen-science efforts to piece together the required data in a manner that permits ongoing analysis. There is, for example, no official machine-readable source of national COVID-19 data provided by the Australian government. As far as we are aware, NSW is the only State or Territory government that has made any effort in that direction by providing some machine-readable data, which we leverage in the $R_{t}$ _for NSW_ theme (see menu above).  
 
-### Daily Global Incidence (fixed y-axis scale)
+### _Epicurves_ for selected countries (common y-axis scale)
 
 ```{r world-incidence-free-scales, fig.height = 8, fig.width = 12}
 gg_cases + 
     facet_wrap(~reorder(country_region, -total_cases),
                scales = "free_x") +
-  labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith Y scale fixed to assist comparison across countries")
+  labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith y-axis scale fixed to facilitate comparisons between countries")
 ```
 
 ***
 
-Forcing the y axis scales to be the same for all plots means that, compared to the previous plot where the y axis could change for each country, the country with the largest number cases, in this case, the USA, appears the same, and the rest of the plots appear smaller.
+Forcing the y-axis scale to be the same for all the plots in this chart means that, compared to the previous chart where the y-axis could change for each country, the country with the largest number cases, in this case, the USA, appears the same, and the rest of the plots appear smaller.
 
-This give us an important context of the number of cases relative to each country. The bottom row of countries, Australia, Japan, Singapore, and New Zealand barely register.
+This provides important context: the number of cases in the USA currently dominates relative to other countries. The bottom row of countries are barely visible, by comparison.
+
+### _Epicurves_ for selected countries (logarithmic y-axis scale)
+
+```{r world-incidence-free-scales-log, fig.height = 8, fig.width = 12}
+gg_cases + 
+    facet_wrap(~reorder(country_region, -total_cases), 
+               scales="free") +
+    scale_y_log10() +
+  labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith logarithmic y-axis scales, different for each country")
+```
+
+***
+
+The final variation the _epicurve_ chart, show here, uses a logarithmic y-axis scale. This emphasises lower counts, which is useful for inspecting the beginnings and ends of the epicurves, or the middle parts where there is more than one "wave", as in China and Singapore.
 
 National-level $R_{t}$ {.storyboard}
 =======================================================================

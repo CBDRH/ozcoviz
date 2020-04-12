@@ -442,27 +442,31 @@ We estimate the _effective reproduction number_ $R_{t}$ using a statistical mode
 
 1. Estimation of the effective reproduction number should really use incidence data tabulated (aggregated) by date of symptom onset, not date of reporting or date of notification (to the relevant health authority). Please see the explanatory notes in the previous section on incidence for further discussion of this data gap, and how health authorities could readily address it.
 
-1. Estimates of the _reproduction number_ depend critically on using the correct distribution for the _serial interval_. The _serial interval_ is the interval between the onset of symptoms in a case and the onset of symptoms in those infected by that case. In other words, the differences between the time (or date) of onset of an _infector_ and the times or dates of onset of its _infectees_. Not every pair of _infector-infectee_ cases will have the same serial interval, even for teh same _infector_ case. Thus, the _serial interval_ is not a single number, or even a range, but rather a statistical distribution. It is often expressed or summarised as the mean and standard deviation of an idealised distribution, typically a discrete $\beta$ distribution, a _discrete Weibull_ distribution or a _log-normal_ distribution. In the charts in this section, we have used values for the mean and standard deviation for the _serial interval_ for COVID-19 published by Nishiura _et al_. {ref}, specifically a mean of 4.7 days with a standard deviation of 2.9 days. Note that this mean _serial interval_ is shorter than most estimates of the incubation period of COVID-19, which is indicative of symptomatic transmission -- that is, some cases of COVID-19 infection transmit the infection to others before they themselves start to experience sysmptoms of illness. That also explains the real difficulties in controlling the spread of the SARS-CoV-2 virus which causes COVID-19. In the next section, $R_{t}$ _for NSW_, we also use an alternative method for estimating the _serial interval_ distribution from emprical data.
+1. Estimates of the _reproduction number_ depend critically on using the correct distribution for the _serial interval_. The _serial interval_ is the interval between the onset of symptoms in a case and the onset of symptoms in those infected by that case. In other words, the differences between the time (or date) of onset of an _infector_ and the times or dates of onset of its _infectees_. Not every pair of _infector-infectee_ cases will have the same serial interval, even for teh same _infector_ case. Thus, the _serial interval_ is not a single number, or even a range, but rather a statistical distribution. It is often expressed or summarised as the mean and standard deviation of an idealised distribution, typically a discrete $\beta$ distribution, a _discrete Weibull_ distribution or a _log-normal_ distribution. In the charts in this section, we have used samples from the Bayesain posterior distribution for the _serial interval_ derived from the observed _serial interval_ pairs  for COVID-19 published by Nishiura _et al_. {ref}. Note that the resulting set of samples have a mean which is shorter than most estimates of the incubation period of COVID-19, which is indicative of symptomatic transmission -- that is, some cases of COVID-19 infection transmit the infection to others before they themselves start to experience sysmptoms of illness. That also explains the real difficulties in controlling the spread of the SARS-CoV-2 virus which causes COVID-19. In the next section, $R_{t}$ _for NSW_, we also use an alternative method for estimating the _serial interval_ distribution from emprical data.
 
-Further discussion of _seril interval_ estimation and calculation of the _effective reproduction number_ can be found in [this technical blog post](https://timchurches.github.io/blog/posts/2020-02-18-analysing-covid-19-2019-ncov-outbreak-data-with-r-part-1/#estimating-changes-in-the-effective-reproduction-number).
+Further discussion of _serial interval_ estimation and calculation of the _effective reproduction number_ can be found in [this technical blog post](https://timchurches.github.io/blog/posts/2020-02-18-analysing-covid-19-2019-ncov-outbreak-data-with-r-part-1/#estimating-changes-in-the-effective-reproduction-number).
 
 ### $R_{t}$ for selected countries on a single plot
 
 ```{r covid-instant-repro}
-covid_instant_r <- add_instant_reproduction(covid_changepoint) %>%
+covid_instant_r <- covid_changepoint %>%
+  add_instant_reproduction(estimate_method="si_from_sample",
+                           si_sample=nishi_si_sample,
+                           config = si_from_sample_nishiura_config) %>%
   group_by(country_region) %>% 
   mutate(total_cases = sum(cases)) %>% 
   ungroup() %>% 
   mutate(country_region = stringr::str_replace_all(country_region,
                            pattern = "_",
-                           replacement = " ")) %>%
-  # only look at dates from March
-  filter(date > ymd("2020-03-01"))
+                           replacement = " "))
 ```
 
 
 ```{r gg-effective-repro-all, cache = FALSE, fig.height = 8, fig.width = 12, cache = FALSE}
-  gg_effective_repro_all(covid_instant_r) + 
+  covid_instant_r %>%
+  # only look at dates from March
+  filter(date > ymd("2020-03-01")) %>%
+  gg_effective_repro_all() + 
   theme(panel.grid.minor = element_blank())
   # ggthemes::scale_colour_colorblind() +
   # annotation_logticks() 
@@ -475,7 +479,10 @@ The $R_{t}$ estimates for each country indicate that most countries are bringing
 ### $R_{t}$ for selected countries as facetted plots
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
-gg_effective_repro_facet(covid_instant_r)  + 
+  covid_instant_r %>%
+  # only look at dates from March
+  filter(date > ymd("2020-03-01")) %>%
+  gg_effective_repro_facet()  + 
   facet_wrap(~reorder(country_region, -total_cases)) +
   theme(panel.grid.minor = element_blank()) +
   easy_rotate_x_labels(angle=45, side="right")
@@ -491,7 +498,10 @@ Most countries are decreasing, but we notice that Japan and Singapore are fluctu
 ### $R_{t}$ for selected countries as facetted plots with 95% credible intervals shown
 
 ```{r gg-effective-r-facet-ribbon, fig.height = 8, fig.width = 12}
-  gg_effective_repro_facet(covid_instant_r)  + 
+  covid_instant_r %>%
+  # only look at dates from March
+  filter(date > ymd("2020-03-01")) %>%
+  gg_effective_repro_facet()  + 
   facet_wrap(~reorder(country_region, -total_cases)) +
   geom_ribbon(aes(ymin = quantile_0_025_r,
                   ymax = quantile_0_975_r),

@@ -87,33 +87,33 @@ plots_A <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si,
 
 A1a <- plots_A$p_R_parametric_si +
   scale_y_log10(limits=c(0.25, 10)) +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas sources of infection treated separately\n",
                        "Parametric serial interval distribution"))
 
 A1b <- plots_A$p_R_si_from_sample +
   scale_y_log10(limits=c(0.25, 10)) +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas sources of infection treated separately\n",
                        "Serial interval distribution estimated from data"))
 
 A2a <- plots_A$p_I_loc +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with local sources of infection",
+    labs(title="COVID-19 incidence in NSW: cases with local sources of infection",
           subtitle="(excluding under investigation)")
 
 A2b <- plots_A$p_I_loc +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with local sources of infection",
+    labs(title="COVID-19 incidence in NSW: cases with local sources of infection",
           subtitle="(excluding under investigation)")
 
 A3a <- plots_A$p_I_imp +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with overseas sources of infection")
+    labs(title="COVID-19 incidence in NSW: cases with overseas sources of infection")
 
 A3b <- plots_A$p_I_imp +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with overseas sources of infection")
+    labs(title="COVID-19 incidence in NSW: cases with overseas sources of infection")
 
 A4a <- plots_A$p_SI_parametric_si +
   xlim(0,25) +
@@ -138,7 +138,7 @@ plots_UA <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si_under_asc,
 
 UA1a <- plots_UA$p_R_parametric_si +
   scale_y_log10(limits=c(0.25, 10)) +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
                        "and 50% imported case under-ascertainment.\n",
                        "Local & overseas sources of infection treated separately\n",
@@ -146,7 +146,7 @@ UA1a <- plots_UA$p_R_parametric_si +
 
 UA1b <- plots_UA$p_R_si_from_sample +
   scale_y_log10(limits=c(0.25, 10)) +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
                        "and 50% imported case under-ascertainment.\n",
                        "Local & overseas sources of infection treated separately\n",
@@ -154,21 +154,29 @@ UA1b <- plots_UA$p_R_si_from_sample +
 
 UA2a <- plots_UA$p_I_loc +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with local sources of infection",
-          subtitle="(excluding under investigation)")
+    labs(title="COVID-19 incidence in NSW: \\: cases with local sources of infection",
+          subtitle=paste0("(excluding under investigation)\n",
+                          "Adjusted for 10-fold local case under-ascertainment\n",
+                          "and 50% imported case under-ascertainment."))
 
 UA2b <- plots_UA$p_I_loc +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with local sources of infection",
-          subtitle="(excluding under investigation)")
+    labs(title="COVID-19 incidence in NSW: cases with local sources of infection",
+          subtitle=paste0("(excluding under investigation)\n",
+                          "Adjusted for 10-fold local case under-ascertainment\n",
+                          "and 50% imported case under-ascertainment."))
 
 UA3a <- plots_UA$p_I_imp +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with overseas sources of infection")
+    labs(title="COVID-19 incidence in NSW: cases with overseas sources of infection",
+          subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
+                          "and 50% imported case under-ascertainment."))
 
 UA3b <- plots_UA$p_I_imp +
     # ylim(0, plots_A$max_I) +
-    labs(title="Incidence: cases with overseas sources of infection")
+    labs(title="COVID-19 incidence in NSW: cases with overseas sources of infection",
+          subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
+                          "and 50% imported case under-ascertainment."))
 
 UA4a <- plots_UA$p_SI_parametric_si +
   xlim(0,25) +
@@ -193,33 +201,33 @@ plots_B <- plot_Ri(parametric_si_obj=nsw_effr_split_incl_uix_para_si,
 
 B1a <- plots_B$p_R_parametric_si +
   scale_y_log10(limits=c(0.25, 10)) +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas sources of infection treated separately\n",
                        "Parametric serial interval distribution"))
 
 B1b <- plots_B$p_R_si_from_sample +
   scale_y_log10(limits=c(0.25, 10)) +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas sources of infection treated separately\n",
                        "Serial interval distribution estimated from data"))
 
 B2a <- plots_B$p_I_loc +
     # ylim(0, plots_B$max_I) +
-    labs(title="Incidence: cases with local sources of infection",
+    labs(title="COVID-19 incidence in NSW: cases with local sources of infection",
          subtitle="(including under investigation)")
 
 B2b <- plots_B$p_I_loc +
     # ylim(0, plots_B$max_I) +
-    labs(title="Incidence: cases with local sources of infection",
+    labs(title="COVID-19 incidence in NSW: cases with local sources of infection",
           subtitle="(including under investigation)")
 
 B3a <- plots_B$p_I_imp +
     # ylim(0, plots_B$max_I) +
-    labs(title="Incidence: cases with overseas sources of infection")
+    labs(title="COVID-19 incidence in NSW: cases with overseas sources of infection")
 
 B3b <- plots_B$p_I_imp +
     # ylim(0, plots_B$max_I) +
-    labs(title="Incidence: cases with overseas sources of infection")
+    labs(title="COVID-19 incidence in NSW: cases with overseas sources of infection")
 
 B4a <- plots_B$p_SI_parametric_si +
   xlim(0,25) +
@@ -242,21 +250,21 @@ plots_C <- plot_Ri(parametric_si_obj=nsw_effr_total_para_si,
                   si_from_sample_obj=nsw_effr_total_si_from_sample)
 
 C1a <- plots_C$p_R_parametric_si +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("All sources of infection treated as local\n",
                        "Parametric serial interval distribution"))
 
 C1b <- plots_C$p_R_si_from_sample +
-  labs(title=expression("7-day sliding window effective reproduction number R"[t]),
+  labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("All sources of infection treated as local,\n",
                        "Serial interval distribution estimated from data"))
 
 C2a <- plots_C$p_I +
-  labs(title="Incidence: all sources of infection",
+  labs(title="COVID-19 incidence in NSW: all sources of infection",
        subtitle="(local, imported and under investigation)")
 
 C2b <- plots_C$p_I +
-  labs(title="Incidence: all sources of infection",
+  labs(title="COVID-19 incidence in NSW: all sources of infection",
        subtitle="(local, imported and under investigation)")
 
 C3a <- plots_C$p_SI_parametric_si +

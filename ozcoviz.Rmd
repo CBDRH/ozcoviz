@@ -14,12 +14,15 @@ library(flexdashboard)
 library(covidrecon)
 library(tidyverse)
 library(lubridate)
+library(ggeasy)
 library(EpiEstim)
 library(patchwork)
 library(gganimate)
 # devtools::install_github('emitanaka/datalegreyar')
 library(datalegreyar)
 library(memoise)
+# remotes::install_github("tylermorganwall/rayshader")
+# library(rayshader)
 
 knitr::opts_chunk$set(cache = FALSE)
 ```
@@ -34,12 +37,14 @@ selected_countries <- c(
                         "United_States_of_America",
                         "South_Korea",
                         "New_Zealand",
-                        # "Canada",
+                        "Canada",
                         "Germany", 
                         "Japan",
-                        # "Iran",
+                        "Sweden",
                         "Spain",
-                        "France")
+                        "France",
+                        "Norway",
+                        "Taiwan")
                         # "Denmark"
 ```
 
@@ -76,7 +81,7 @@ source("plot_nsw_eff_r.R")
 source("nsw_eff_R_data_and_plot_prep.R")
 ```
 
-Overview
+Overview 
 =======================================================================
 
 ```{r datalegreyar, fig.align='center'}
@@ -110,7 +115,7 @@ if (all(vals[maxpos] > vals[18:26])) {
 
 The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
 
-Column  {.tabset}
+Column  {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 
 ### Introduction
@@ -303,6 +308,21 @@ In this chart, we can now discern three distinct groups of countries:
 * a middle group comprising the UK and European countries
 * a lower group, which includes Australia , New Zealand, South Korea, China, Japan and Singapore, which all have their local COVID-19 epidemics under control (but definitely not eradicated). Note however that Japan and Singapore are now exiting that lower group and heading upwards.
 
+```{r, eval=FALSE}
+### Semi-log **cumulative incidence and cumulative deaths** for selected countries -- the _Grattan Institute_ chart with deaths added
+
+---{r gg-cumulative-incidence-deaths, fig.height = 8, fig.width = 12}
+
+p <- gg_covid_cumulative_cases_deaths_exceed_limit(covid_since_100,
+                                 limit = 100) + 
+      theme(panel.grid.minor = element_blank())  +
+      scale_colour_viridis_c("Cumulative deaths")
+
+plot_gg(p, multicore=TRUE,height=5,width=6,scale=500)
+---
+
+***
+```
 
 ### _Epicurves_ for selected countries
 
@@ -310,7 +330,11 @@ In this chart, we can now discern three distinct groups of countries:
 
 covid_since_changepoint_w_total <- covid_changepoint %>% # was:  covid_since_100
   group_by(country_region) %>% 
-  mutate(total_cases = sum(cases))
+  mutate(total_cases = sum(cases)) %>%
+  ungroup() %>%
+  mutate(country_region = stringr::str_replace_all(country_region,
+                           pattern = "_",
+                           replacement = " "))
 
 covid_since_changepoint_w_total_labels <- slice(covid_since_changepoint_w_total, 1) 
 
@@ -338,7 +362,7 @@ gg_cases +
 
 ***
 
-The charts shown here are _epicurves_ -- that is, daily count of incident (new) cases, using data collated by the European CDC.
+The charts shown here are _epicurves_ -- that is, daily count of incident (new) cases, using data collated by the European CDC. It is easy to see when (or whether) the epidemic in each country entered a decay pahse and the daily incidence started to decline (although the cumulative incidence will, by definition, continue to increase during the decay phase until the epidemic is completely extinguished).
 
 Note that there are some days where the number of cases appears to spike upwards, followed by a decrease the following day. This indicates that there may be some data discrepancies in how the European CDC is capturing data from WHO Situation Reports. It underlines the importance of nations providing reliable machine-readable access to their own COVID-19 data. By "machine-readable" we mean CSV or JSON data files which are automatically downlaodable, or an API which can be queried automatically to yield such data. Neither of those are difficult to establish, yet nearly all national governments have failed to provide such data, leaving it to third-party agencies and citizen-science efforts to piece together the required data in a manner that permits ongoing analysis. There is, for example, no official machine-readable source of national COVID-19 data provided by the Australian government. As far as we are aware, NSW is the only State or Territory government that has made any effort in that direction by providing some machine-readable data, which we leverage in the $R_{t}$ _for NSW_ theme (see menu above).  
 
@@ -374,7 +398,9 @@ The final variation the _epicurve_ chart, show here, uses a logarithmic y-axis s
 National-level $R_{t}$ {.storyboard}
 =======================================================================
 
-### Explanation
+### The _reproduction number_
+
+#### The _basic reproduction number_ $R_{0}$
 
 A key statistic in field epidemiology is the _basic reproduction number_, often referred to as "R-zero" or "R-nought", and written $R_{0}$. This is the number of people we expect each new case of a disease such as COVID-10 to infect -- in other words, how many people each case passes the disease on to -- at the **beginning** of a disease outbreak or epidemic, **before** any public health controls or interventions have been established or put in place. 
 
@@ -389,7 +415,7 @@ As such, $R_{0}$ is useful in the early stages of an epidemic, but as soon as (e
 
 #### What are the implications of the _effective reproduction number_?
 
-** If $R_{t}$ equals 1.0**
+**If $R_{t}$ equals 1.0**
 
 - Each infected person spreads the disease, on average, to one other person during the course of their illness (which ends when they either recover or die). Therefore, in the long-run, the number of infected people neither grows nor shrinks. Fron day-to-day there may be some variation, but overall the number of new infections stays the same. 
 
@@ -406,25 +432,30 @@ As such, $R_{0}$ is useful in the early stages of an epidemic, but as soon as (e
 
 We estimate the _effective reproduction number_ $R_{t}$ using a statistical model which was developed in 2013 by Anne Cori and colleagues at Imperial College London (ICL), as described in [ref]. The method was later extended by Thompson and colleagues (including Anne Cori), also at ICL, as described in [ref]. We won't go into the details of the model here -- they are described in details in the cited papers -- but we will remark on a few key points that need to be born in mind when interpreting these statistics. 
 
-The first is that the methods we use here estimate the **instantaneous** effective reporoduction number, which is...
+1. The methods we use here estimate the **instantaneous** effective reporoduction number, which is...
 
-The second point to bear in mind is that the _reproduction number_ is an estimate of the spread of an infection is a specific, local population, and thus we should only use counts of incident (new) infections which result from local spread when estimating it, and (UP TO HERE) 
+1. The _reproduction number_ is an estimate of the spread of an infection is a specific, local population, and thus we should really only use counts of incident (new) infections which are the result of **local** spread -- that is, we should not include cases which were acquired elsewhere, such as overseas, when estimating it. Doing so will bias our estimates of $R_{t}$ upwards. In fact, the estimation method used here can make proper use of **both** incident counts of imported cases and separate counts of locally-acquired cases. Unfortunately, very few jurisdictions have released data which enable that disstincttion, beeen imprted and locally-acquired cases, to be made, and so we just use tital incidence for the estimates shown in this section. However, incident counts of cases, split into imported and locally-acquired counts, **is** available from NSW Health, and we report on those, much better data in the next section (see menu at top of page).
 
-These estimates reflect the number of new cases we expect from an infected person as they interact with a population. The higher the number, the worse the control of the infection, and the more people will be infected. We want this number to be below 1, and preferably as close to 0 as possible.
+1. We use a seven-day trailing sliding window of incidence case counts to calculate the current $R_{t}$ estimate. Thus, for each date, the estimate is based on the count of incident cases on that date and for the six days prior to that. This is done to smooth the etsimates and provide greater precision for each estimate.
 
-**Limitations**
+1. The estimation procedure uses Bayesain methods, and we display the median estimate of the posterior distribution of the estimated $R_{t}$, as well as the 95% credible interval in some of the charts.
 
-These estimates are for all countries do not account for people who bring the infection to the population by travelling. This means that we are assuming all of these infections are spread by the community. However, Australia actually has quite a large proportion of people who are travelling from overseas with COVID19. This means that these estimates might be over-estimating R0. We have explored what is possible if we improve incorporate these imported cases, where we have this data for New South Wales.
+1. Estimation of the effective reproduction number should really use incidence data tabulated (aggregated) by date of symptom onset, not date of reporting or date of notification (to the relevant health authority). Please see the explanatory notes in the previous section on incidence for further discussion of this data gap, and how health authorities could readily address it.
 
+1. Estimates of the _reproduction number_ depend critically on using the correct distribution for the _serial interval_. The _serial interval_ is the interval between the onset of symptoms in a case and the onset of symptoms in those infected by that case. In other words, the differences between the time (or date) of onset of an _infector_ and the times or dates of onset of its _infectees_. Not every pair of _infector-infectee_ cases will have the same serial interval, even for teh same _infector_ case. Thus, the _serial interval_ is not a single number, or even a range, but rather a statistical distribution. It is often expressed or summarised as the mean and standard deviation of an idealised distribution, typically a discrete $\beta$ distribution, a _discrete Weibull_ distribution or a _log-normal_ distribution. In the charts in this section, we have used values for the mean and standard deviation for the _serial interval_ for COVID-19 published by Nishiura _et al_. {ref}, specifically a mean of 4.7 days with a standard deviation of 2.9 days. Note that this mean _serial interval_ is shorter than most estimates of the incubation period of COVID-19, which is indicative of symptomatic transmission -- that is, some cases of COVID-19 infection transmit the infection to others before they themselves start to experience sysmptoms of illness. That also explains the real difficulties in controlling the spread of the SARS-CoV-2 virus which causes COVID-19. In the next section, $R_{t}$ _for NSW_, we also use an alternative method for estimating the _serial interval_ distribution from emprical data.
 
-### Selected Countries
+Further discussion of _seril interval_ estimation and calculation of the _effective reproduction number_ can be found in [this technical blog post](https://timchurches.github.io/blog/posts/2020-02-18-analysing-covid-19-2019-ncov-outbreak-data-with-r-part-1/#estimating-changes-in-the-effective-reproduction-number).
 
+### $R_{t}$ for selected countries on a single plot
 
 ```{r covid-instant-repro}
 covid_instant_r <- add_instant_reproduction(covid_changepoint) %>%
   group_by(country_region) %>% 
   mutate(total_cases = sum(cases)) %>% 
   ungroup() %>% 
+  mutate(country_region = stringr::str_replace_all(country_region,
+                           pattern = "_",
+                           replacement = " ")) %>%
   # only look at dates from March
   filter(date > ymd("2020-03-01"))
 ```
@@ -439,14 +470,16 @@ covid_instant_r <- add_instant_reproduction(covid_changepoint) %>%
 
 ***
 
-The effective R estimates for each country indicate that most countries are bringing the spread of the virus under control. However there is some wide variation. The measurement of effective R for Australia has decreased substantially, now falling below one, indicating that we have now started to control the outbreak.
+The $R_{t}$ estimates for each country indicate that most countries are bringing the spread of the virus under control. Currently only Singapore and Japan (amongst these selected countries) are experiencing rising $R_{t}$. However there is some wide variation. The estimate of $R_{t}$ for Australia is now well below 1.0, indicating that epidemic is in decay.
 
-### Per Country
+### $R_{t}$ for selected countries as facetted plots
 
 ```{r gg-effective-r-facet, fig.height = 8, fig.width = 12}
 gg_effective_repro_facet(covid_instant_r)  + 
   facet_wrap(~reorder(country_region, -total_cases)) +
-  theme(panel.grid.minor = element_blank())
+  theme(panel.grid.minor = element_blank()) +
+  easy_rotate_x_labels(angle=45, side="right")
+
 ```
 
 ***
@@ -455,22 +488,23 @@ This is the same information presented as in the previous graphic, but with each
 
 Most countries are decreasing, but we notice that Japan and Singapore are fluctuating, due to recent outbreaks.
 
-### Per Country (ribbons)
+### $R_{t}$ for selected countries as facetted plots with 95% credible intervals shown
 
 ```{r gg-effective-r-facet-ribbon, fig.height = 8, fig.width = 12}
   gg_effective_repro_facet(covid_instant_r)  + 
   facet_wrap(~reorder(country_region, -total_cases)) +
   geom_ribbon(aes(ymin = quantile_0_025_r,
                   ymax = quantile_0_975_r),
-              alpha = 0.1,
-              colour = "gray50") 
+              alpha = 0.2) +
+  easy_rotate_x_labels(angle=45, side="right")
+
 ```
 
 ***
 
 This shows the uncertainty around the estimate of the effective R. We notice that as time goes on, there is less uncertainty around the estimate, so we can more confident in our estimate at these later times.
 
-### Australia
+### Australia: $R_{t}$ and incidence
 
 ```{r this-is-australia}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -482,7 +516,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 
 
-### Japan
+### Japan: $R_{t}$ and incidence
 
 ```{r this-is-japan}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -494,19 +528,19 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### South Korea
+### South Korea: $R_{t}$ and incidence
 
 ```{r this-is-south-krea}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
                                        covid,
-                                       "South_Korea")
+                                       "South Korea")
 ```
 
 ***
 
 Cool!
 
-### China
+### China: $R_{t}$ and incidence
 
 ```{r this-is-china}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -518,7 +552,19 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### Germany
+### Canada: $R_{t}$ and incidence
+
+```{r this-is-canada}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Canada")
+```
+
+***
+
+Cool!
+
+### Germany: $R_{t}$ and incidence
 
 ```{r this-is-germany}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -530,7 +576,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### Spain
+### Spain: $R_{t}$ and incidence
 
 ```{r this-is-spain}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -542,7 +588,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### France
+### France: $R_{t}$ and incidence
 
 ```{r this-is-france}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -554,7 +600,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### Italy
+### Italy: $R_{t}$ and incidence
 
 ```{r this-is-italy}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -566,7 +612,19 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### Singapore
+### Norway: $R_{t}$ and incidence
+
+```{r this-is-norway}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Norway")
+```
+
+***
+
+Cool!
+
+### Singapore: $R_{t}$ and incidence
 
 ```{r this-is-singapore}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -578,7 +636,31 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### United Kingdom
+### Sweden: $R_{t}$ and incidence
+
+```{r this-is-sweden}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Sweden")
+```
+
+***
+
+Cool!
+
+### Taiwan: $R_{t}$ and incidence
+
+```{r this-is-taiwan}
+gg_effective_repro_incidence_patchwork(covid_instant_r,
+                                       covid,
+                                       "Taiwan")
+```
+
+***
+
+Cool!
+
+### United Kingdom: $R_{t}$ and incidence
 
 ```{r this-is-uk}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
@@ -590,7 +672,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Cool!
 
-### USA
+### USA: $R_{t}$ and incidence
 
 ```{r this-is-usa}
 gg_effective_repro_incidence_patchwork(covid_instant_r,

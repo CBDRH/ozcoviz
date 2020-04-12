@@ -115,7 +115,7 @@ get_nsw_data <- function() {
           source == paste0("Locally acquired - contact of a ",
                            "confirmed case and/or in a known cluster") ~ "LC",
           source == "Locally acquired - contact not identified" ~ "LNC",
-          source == "Overseas" ~ "OS",
+          source == "Overseas or interstate" ~ "OS",
           source == "Under investigation" ~ "UIX",
           TRUE ~ "OTH")) %>%
         group_by(notification_date, source) %>%

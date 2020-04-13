@@ -553,7 +553,7 @@ National-level $R_{t}$ {.storyboard}
 
 A key statistic in field epidemiology is the _basic reproduction number_, often referred to as "R-zero" or "R-nought", and written $R_{0}$. This is the number of people we expect each new case of a disease such as COVID-10 to infect -- in other words, how many people each case passes the disease on to -- at the **beginning** of a disease outbreak or epidemic, **before** any public health controls or interventions have been established or put in place. 
 
-$R_{0}$ was popularised in the 2011 film _Contagion_. Here is Gwyneth Paltrow, who plays a US CDC epidemiologist, explaining $R_{0}$ (with a few errors -- it's _reproduction number_, not "reproductive rate" as she say) to government officials: 
+$R_{0}$ was popularised in the 2011 film _Contagion_. Here is Kate Winslet, who plays a US CDC epidemiologist, explaining $R_{0}$ (with a few errors -- it's _reproduction number_, not "reproductive rate" as she say) to government officials: 
 
 <iframe width="560" height="315" align="center" src="https://www.youtube.com/embed/VrATMF_FB9M" frameborder="0" allowfullscreen></iframe>
 <br>
@@ -574,7 +574,7 @@ As such, $R_{0}$ is useful in the early stages of an epidemic, but as soon as (e
 
 **If $R_{t}$ is less than 1.0**
 
-- Each infected person spreads the disease, on average, to fewer than one other person during the course of their illness (obviously each person spreads it to a whole number of other people eg zero, one, two, three, but _on average_, taken across a large number of infected individuals, the number infected by each person with the disease is less than one. Again, it is easy to see that this results in a falling number of new infections each day, and that rate of decay in the number of new infections also decays -- in other words, epidemics decay exponentially too. As an aside, just a epidemics tend to grow much more quickly than most people expect -- humans tend to reason using linear heuristics -- so do epidemics decay much more **slowly** that people expect, for the same reason -- humans assume linear behaviour, which does not (necessarily) apply to communicable disease dynamics.  
+- Each infected person spreads the disease, on average, to fewer than one other person during the course of their illness (obviously each person spreads it to a whole number of other people, e.g., zero, one, two, three, but _on average_, taken across a large number of infected individuals, the number infected by each person with the disease is less than one. Again, it is easy to see that this results in a falling number of new infections each day, and that rate of decay in the number of new infections also decays -- in other words, epidemics decay exponentially too. As an aside, just a epidemics tend to grow much more quickly than most people expect -- humans tend to reason using linear heuristics -- so do epidemics decay much more **slowly** that people expect, for the same reason -- humans assume linear behaviour, which does not (necessarily) apply to communicable disease dynamics.  
 
 
 #### Estimating the time-varying _effective reproduction number_ $R_{t}$
@@ -851,11 +851,11 @@ $R_{t}$ for NSW {.storyboard}
 
 ### Explanation
 
-The charts of the time-varying effective reproduction number $R_{t}$ for New South Wales COVID-19 incidence data are similar to the analyses presented in the previous section, with the important distinction that incidence cases have been able to be divided into locally-acquired cases and cases where the infection was acquired elsewhere (overseas or interstate). This premits much more accurate estimated of the true $R_{t}}$.
+The charts of the time-varying effective reproduction number $R_{t}$ for New South Wales COVID-19 incidence data are similar to the analyses presented in the previous section, with the important distinction that incidence cases have been able to be divided into locally-acquired cases and cases where the infection was acquired elsewhere (overseas or interstate). This premits much more accurate estimated of the true $R_{t}$.
 
-This has been enable by the publication of more detailed data by NSW Health, available on the [NSW government open data web site](https://data.nsw.gov.au/nsw-covid-19-data), and updated daily, in conjunction with data derived by counting pixels in NSW Health charts to obtain earlier data (luckily the charts were high-resoloution and thus the data extracted this way is very accurate).
+This has been enable by the publication of more detailed data by NSW Health, available on the [NSW government open data web site](https://data.nsw.gov.au/nsw-covid-19-data), and updated daily, in conjunction with data derived by counting pixels in NSW Health charts to obtain earlier data (luckily the charts were high-resolution and thus the data extracted this way is very accurate).
 
-In each of the frames in this section, estimates of the NSW effective reproduction number are shown, based on either a parameteric _serial interval_ distribution, or a _serial _interval_ distribution derived from data collated by [Nishiura _et al._](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
+In each of the frames in this section, estimates of the NSW effective reproduction number are shown, based on either a parametric _serial interval_ distribution, or a _serial  interval_ distribution derived from data collated by [Nishiura _et al._](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
 Frames in which imported and locally-acquired cases are **not** distinguished in the estimates are also provided for comparison. These are much less likely to be correct than the estimates using split imported/locally-acquired counts.
 

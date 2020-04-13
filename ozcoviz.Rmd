@@ -114,11 +114,16 @@ if (all(vals[maxpos] > vals[18:26])) {
     
 ```
 
+### Pre-amble
+
 The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
 
-### If you are viewing this site on a mobile phone... {.mobile}
+### Pre-amble {.mobile}
 
-We urge you to turn your phone through 90 degrees and view the site in landscape mode.
+**We urge you to turn your phone through 90 degrees and view the site in landscape mode.**
+
+The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
+
 
 Column  {.tabset .tabset-fade}
 -----------------------------------------------------------------------

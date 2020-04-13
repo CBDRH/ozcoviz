@@ -3,7 +3,7 @@ title: "OzCoViz"
 date: "`r paste('last updated', format(lubridate::now(), '%H:%M, %d %B %Y'))`"
 output:
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
     theme: bootstrap
     social: ["menu"]

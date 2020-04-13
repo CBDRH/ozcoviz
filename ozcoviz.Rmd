@@ -14,6 +14,7 @@ library(flexdashboard)
 library(covidrecon)
 library(tidyverse)
 library(lubridate)
+library(tsibble)
 library(ggeasy)
 library(EpiEstim)
 library(patchwork)
@@ -202,9 +203,9 @@ Cumulative incidence is, as the name suggests, just the cumulative sum of the da
 
 #### Semi-log cumulative incidence chart
 
-The first chart presented here is a semi-log cumulative inncidence chart. This chart seems to have been popularised by [John Burn-Murdoch](https://twitter.com/jburnmurdoch) in the [Financial Times](https://www.ft.com/coronavirus-latest), but it appears it was [first used by Matt Cowgill](https://blog.grattan.edu.au/2020/03/australian-governments-can-choose-to-slow-the-spread-of-coronavirus-but-they-must-act-immediately/) from Australia's very own [Grattan Institute](https://blog.grattan.edu.au). It has since been widely copied and reproduced. Please see a [blog post by Prof Rob Hyndman](https://robjhyndman.com/hyndsight/logratios-covid19/) for further discussion of this chart, and some alternative analyses (one of which we also reproduce in the section on time-varying effective reproduction numbers ($R_{t}$).
+The first chart presented here is a semi-log cumulative inncidence chart. This chart seems to have been popularised by [John Burn-Murdoch](https://twitter.com/jburnmurdoch) in the [Financial Times](https://www.ft.com/coronavirus-latest), but it appears it was [first used by Matt Cowgill](https://blog.grattan.edu.au/2020/03/australian-governments-can-choose-to-slow-the-spread-of-coronavirus-but-they-must-act-immediately/) from Australia's very own [Grattan Institute](https://blog.grattan.edu.au). It has since been widely copied and reproduced. Please see a [blog post by Prof Rob Hyndman](https://robjhyndman.com/hyndsight/logratios-covid19/) for further discussion of this chart, and some alternative analyses.
 
-There are several variations on the _Grattan+ chart presented, please see the notes for each one.
+There are several variations on the _Grattan_ chart presented, please see the notes for each one.
 
 #### _Epicurves_
 
@@ -323,6 +324,145 @@ plot_gg(p, multicore=TRUE,height=5,width=6,scale=500)
 
 ***
 ```
+
+```{r, eval=FALSE}
+
+### The Hyndman logratio plot
+
+---{r hyndman-logratio, fig.height = 8, fig.width = 12}
+
+
+covid_since_changepoint <- covid_since_changepoint %>%
+  mutate(cases_logratio = tsibble::difference(log(cases))) 
+
+covid_data_last <- covid_since_changepoint %>%
+                    group_by(country_region) %>%
+                    top_n(1, days_since_limit) %>%
+                    ungroup()
+
+covid_since_changepoint %>%
+  # filter(date >= as.Date("2020-03-01")) %>%
+  ggplot(aes(x = days_since_limit, y = cases_logratio, col = country_region)) +
+  geom_smooth(method = "loess", se = FALSE, span=0.15) +
+  scale_y_continuous(
+   "Daily increase in cumulative cases",
+    breaks = log(1+seq(-60,60,by=10)/100),
+    labels = paste0(seq(-60,60,by=10),"%"),
+    minor_breaks=NULL # ,
+    #sec.axis = sec_axis(~ log(2)/(.),
+    #  breaks = c(2:7,14,21),
+    #  name = "Doubling time (days)")
+  ) +
+  facet_wrap(country_region~.) +
+
+  # ggrepel::geom_label_repel(data = covid_data_last,
+  #                             aes(x = days_since_limit,
+  #                                 y = cases_logratio,
+  #                                 col = country_region,
+  #                                 label = country_region),
+  #                            size = 4,
+  #                             nudge_x = 4 ,
+  #                             # direction = "x",
+  #                             segment.alpha = 0.3,
+  #                             # segment.size = 0.2,
+  #                             # arrow = arrow(length = unit(0.02, "npc"))
+  #                            )
+  # 
+  theme_minimal() 
+---
+
+***
+
+Hey!
+```
+
+### Log-log incidence versus cumulative incidence animation
+
+```{r cum-incidence-incidence-prep}
+model_covid_changepoint <- covid_changepoint %>%
+  # filter(country_region %in% c("USA", "Australia", "China")) %>%
+  rename(incidence_date=date) %>%
+  mutate(cases = ifelse(cases == 0, NA, cases),
+         cumulative_cases = ifelse(cumulative_cases == 0, NA, cumulative_cases)) %>%
+  mutate(daynum = as.integer(difftime(incidence_date,
+                                      min(incidence_date), 
+                                      units="days")))
+
+# table(model_covid_changepoint$daynum)
+
+i <- 0
+for (c in unique(model_covid_changepoint$country_region)) {
+  i <- i + 1
+  d <- model_covid_changepoint %>% 
+        filter(country_region == c) %>%
+        arrange(incidence_date)
+  # print(c)
+  # print(nrow(d))
+  loess_mod <- loess(data=d, formula=cases ~ cumulative_cases, span = .5)
+  smoothed_cases <- predict(loess_mod)
+  if (length(smoothed_cases) < nrow(d)) {
+    smoothed_cases <- c(rep(NA, nrow(d) - length(smoothed_cases) ), smoothed_cases)
+  }
+  
+  d$smoothed_cases <- smoothed_cases
+  
+  if (i == 1) {
+    smooth_covid_changepoint <- d
+  } else {
+    smooth_covid_changepoint <- smooth_covid_changepoint %>%
+      bind_rows(d)
+  }
+}
+
+min_date <- min(smooth_covid_changepoint$incidence_date)
+
+nframes <- as.integer(difftime(max(smooth_covid_changepoint$incidence_date),
+                               min_date, 
+                               units="days"))  
+
+nframes <- max(smooth_covid_changepoint$daynum)
+```
+
+```{r cum-incidence-incidence, fig.height = 8, fig.width = 12,  warning=FALSE, message=FALSE}
+
+p <- smooth_covid_changepoint %>%
+  mutate(alfa=ifelse(country_region == "Australia", 1, 0.5)) %>%
+ggplot(aes(x = cumulative_cases,
+             y = smoothed_cases,
+             group=country_region,
+             colour=country_region,
+             label=country_region,
+             alpha=alfa)) +
+  geom_line() +
+  geom_point(size=2) +
+  ggrepel::geom_label_repel(size = 4,
+                            force=2,
+                            nudge_x = 0.2 ,
+                            direction = "x",
+                            segment.alpha = 0.3) +
+  scale_alpha(range=c(0.65, 1)) +
+  transition_reveal(daynum) +
+  scale_x_log10(limits=c(10, NA), labels=scales::comma_format(accuracy=1)) +
+  scale_y_log10(labels=scales::comma_format(accuracy=1)) +
+  # facet_wrap(country_region ~ .) +
+  labs(title='COVID-19 trajectories for selected countries as at {format(min_date + lubridate::days(frame_along), "%d %b %Y")}', 
+       x = 'Cumulative cases (log scale)', 
+       y = 'Incident cases (log scale)',
+       caption = glue::glue("Tim Churches (UNSW) & Nick Tierney (Monash)
+                  Data source: European CDC up to {format(max(smooth_covid_changepoint$incidence_date),'%d %b %Y')}")) +
+  theme_minimal() +
+  theme(legend.position="none")
+
+suppressMessages({
+  animate(p, duration=60, height=500, width=800, nframes=nframes*2, detail=5, start_pause=5, end_pause=10, rewind=TRUE)
+})
+```
+
+***
+
+This chart relicates [a chart](https://aatishb.com/covidtrends/) developed by [Aatish Bhatia](https://aatishb.com) in collaboration with [Minute Physics](https://www.youtube.com/user/minutephysics). The plot shows, for each country, the number of incident (new) cases on the y-axis, on a logarithmic scale, versus the cumulative total of cases on the x-axis, also on a loagarithmic scale. When plotted in this way, uncontrolled epidemics with exponential growth take a linear (straight line) trajectory at some angle. As an epidemic is brought under control, the trajectory drops below the straight line, eveentually falling vertically if the epidemic has been completely extinguished. 
+
+This is just an alternative visualisation of teh data shown in earlier frames, but it looks pretty and the animation is helpful, because time is not one of the explicit dimensions of the chart.
 
 ### _Epicurves_ for selected countries
 
@@ -512,7 +652,7 @@ Most countries are decreasing, but we notice that Japan and Singapore are fluctu
 
 ***
 
-This shows the uncertainty around the estimate of the effective R. We notice that as time goes on, there is less uncertainty around the estimate, so we can more confident in our estimate at these later times.
+This shows the uncertainty around the median estimates of the effective reproduction number. The grey bands either side of the median estimate indicate the area in which we are 95% certain the true estimate lies (note: these are Bayesian, not frequentist estimates).
 
 ### Australia: $R_{t}$ and incidence
 
@@ -524,6 +664,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
+The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
 
 ### Japan: $R_{t}$ and incidence

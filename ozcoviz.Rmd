@@ -136,7 +136,7 @@ This web site is a joint effort of researchers at the [South Western Sydney Clin
 knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
 knitr::include_graphics(path=here::here("assets/unsw_logo.png"))
 knitr::include_graphics(path=here::here("assets/monash-logo-mono.png"))
-knitr::include_graphics(path=here::here("assets/ingham_logo.png"))
+knitr::include_graphics(path=here::here("assets/Ingham_Institute_Logo_Horizontal.jpg"))
 ```
 
 ```{r, out.width="20%", fig.align="right", eval=FALSE}

@@ -541,7 +541,7 @@ We estimate the _effective reproduction number_ $R_{t}$ using a statistical mode
 
 1. The methods we use here estimate the **instantaneous** effective reproduction number, which is is the average number of secondary cases that each infected individual would infect if the conditions remained as they were at time _t_. In that respect, it is analogous to _current life expectancy_ (which is the one usually calculated), which is the length of time someone is expected to live if the age- and sex-specific death rates as they currently are persist, unchnaged, into the future.
 
-1. The _reproduction number_ is an estimate of the spread of an infection in a specific, local population, and thus we should really only use counts of incident (new) infections which are the result of **local** spread -- that is, we should not include cases which were acquired elsewhere, such as overseas, when estimating it. Doing so will bias our estimates of $R_{t}$ upwards. In fact, the estimation method used here can make proper use of **both** incident counts of imported cases and separate counts of locally-acquired cases. Unfortunately, very few jurisdictions have released data which enable that distinction, between imported and locally-acquired cases, to be made, and so we just use total incidence for the estimates shown in this section. However, incident counts of cases, split into imported and locally-acquired counts, **is** available from NSW Health, and we report on those, much better data in the next section (see menu at top of page).
+1. The _reproduction number_ is an estimate of the spread of an infection in a specific, local population, and thus we should really only use counts of incident (new) infections which are the result of **local** spread -- that is, we should not include cases which were acquired elsewhere, such as overseas or interstate, when estimating it. Doing so will bias our estimates of $R_{t}$ upwards. In fact, the estimation method used here can make proper use of **both** incident counts of imported cases and separate counts of locally-acquired cases. Unfortunately, very few jurisdictions have released data which enable that distinction, between imported and locally-acquired cases, to be made, and so we just use total incidence for the estimates shown in this section. However, incident counts of cases, split into imported and locally-acquired counts, **is** available from NSW Health, and we report on those, much better data in the next section (see menu at top of page).
 
 1. We use a seven-day trailing sliding window of incidence case counts to calculate the current $R_{t}$ estimate. Thus, for each date, the estimate is based on the count of incident cases on that date and for the six days prior to that. This is done to smooth the estimates and provide greater precision for each estimate.
 
@@ -855,7 +855,7 @@ In addition, frames in which the counts of cases in NSW have been inflated by a 
 
 Please see the paper by [Thompson _et al_.)(https://www.sciencedirect.com/science/article/pii/S1755436519300350) for details of the methods used here.
 
-### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
+### **NSW -- locally-acquired & overseas/interstate-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
 
 ```{r nsw-local-os-sep, fig.width=10, fig.height=10}
 A1a / A2a / A3a / A4a + plot_layout(heights=c(2,1,1,1))
@@ -866,7 +866,7 @@ A1a / A2a / A3a / A4a + plot_layout(heights=c(2,1,1,1))
 Commentary
 
 
-### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation excluded)<br>serial interval distribution estimated from data
+### **NSW -- locally-acquired & overseas/interstate-acquired cases treated separately**<br>(cases under investigation excluded)<br>serial interval distribution estimated from data
 
 ```{r nsw-local-os-sep-est-si-dist, fig.width=10, fig.height=10}
 A1b / A2b / A3b / A4b + plot_layout(heights=c(2,1,1,1))
@@ -878,7 +878,7 @@ Commentary
 
 ---
 
-### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas-acquired cases treated separately**, (cases under investigation excluded), parametric serial interval distribution
+### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas/interstate-acquired cases treated separately**, (cases under investigation excluded), parametric serial interval distribution
 
 ```{r nsw-adj-local-acquire-separately, fig.width=10, fig.height=10}
 UA1a / UA2a / UA3a / UA4a + plot_layout(heights=c(2,1,1,1))
@@ -886,11 +886,11 @@ UA1a / UA2a / UA3a / UA4a + plot_layout(heights=c(2,1,1,1))
 
 ***
 
-In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
+In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas or interstate sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
 
 ---
 
-### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas-acquired cases treated separately**, (cases under investigation excluded), serial interval distribution estimated from data
+### **NSW -- adjusting for potential under-ascertainment, locally-acquired & overseas/interstate-acquired cases treated separately**, (cases under investigation excluded), serial interval distribution estimated from data
 
 ```{r nsw-adj-under-os-separately, fig.width=10, fig.height=10}
 UA1b / UA2b / UA3b / UA4b + plot_layout(heights=c(2,1,1,1))
@@ -898,13 +898,13 @@ UA1b / UA2b / UA3b / UA4b + plot_layout(heights=c(2,1,1,1))
 
 ***
 
-In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
+In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas or interstate sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
 
 In fact, under-ascertainment has little effect on the effective reproduction number, which is driven by the number of cases each case infects, not the total number of cases or infectious individuals.
 
 ---
 
-### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation included)<br>parametric serial interval distribution
+### **NSW -- locally-acquired & overseas/interstate-acquired cases treated separately**<br>(cases under investigation included)<br>parametric serial interval distribution
 
 ```{r nsw-local-os-separately-paramtric, fig.width=10, fig.height=10}
 B1a / B2a / B3a / B4a + plot_layout(heights=c(2,1,1,1))
@@ -916,7 +916,7 @@ Commentary
 
 ---
 
-### **NSW -- locally-acquired & overseas-acquired cases treated separately**<br>(cases under investigation included)<br>serial interval distribution estimated from data
+### **NSW -- locally-acquired & overseas/interstate-acquired cases treated separately**<br>(cases under investigation included)<br>serial interval distribution estimated from data
 
 ```{r nsw-local-os-sep-si-dist-data, fig.width=10, fig.height=10}
 B1b / B2b / B3b / B4b + plot_layout(heights=c(2,1,1,1))

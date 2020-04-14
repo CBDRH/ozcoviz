@@ -622,7 +622,11 @@ covid_instant_r <- covid_changepoint %>%
 
 ***
 
-The $R_{t}$ estimates for each country indicate that most countries are bringing the spread of the virus under control. Currently only Singapore and Japan (amongst these selected countries) are experiencing rising $R_{t}$. However there is some wide variation. The estimate of $R_{t}$ for Australia is now well below 1.0, indicating that the epidemic is in decay.
+The $R_{t}$ estimates for each country indicate that most countries are bringing the spread of the virus under control. Currently only Singapore and Japan (amongst these selected countries) are experiencing rising $R_{t}$. Note that there again appears to be three clusters with respect to the current $R_{t}$: 
+
+* one group comprising Australia, New Zealand, South Korea, Taiwan and Norway, in which the $R_{t}$ is well below 1.0 and thus the local epidemics are in fast decay. 
+* a middle group comprising China, the European and North American countries for which the $R_{t}$ is around 1.0
+* a third group comprising Singapore and Japan in which the $R_{t}$ is much higher, and rising.
 
 ### $R_{t}$ for selected countries as facetted plots
 
@@ -641,7 +645,7 @@ The $R_{t}$ estimates for each country indicate that most countries are bringing
 
 This is the same information presented as in the previous graphic, but with each country split into its own graph. This allows us to see the trajectories of effective R for each country more easily 
 
-Most countries are decreasing, but we notice that Japan and Singapore are fluctuating, due to recent recrudescent outbreaks.
+Most countries are decreasing, but we notice that Japan and Singapore are rising, due to recent recrudescent outbreaks.
 
 ### $R_{t}$ for selected countries as facetted plots with 95% credible intervals shown
 

@@ -5,7 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    theme: minty
+    theme: lumen
     social: ["menu"]
 ---
 
@@ -117,29 +117,6 @@ if (all(vals[maxpos] > vals[18:26])) {
 Column
 -----------------------------------------------------------------------
 
-### Introduction {.mobile}
-
-**We urge you to turn your phone through 90 degrees and view the site in landscape mode.**
-
-This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Econometrics and Business Statistics Research Group](https://research.monash.edu/en/organisations/econometrics-business-statistics) of [Monash University](https://www.monash.edu/), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
-
-```{r, out.width="20%", fig.show='hold', out.extra='style="padding:25px"'}
-knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
-knitr::include_graphics(path=here::here("assets/unsw_logo.png"))
-knitr::include_graphics(path=here::here("assets/monash-logo-mono.png"))
-knitr::include_graphics(path=here::here("assets/Ingham_Institute_Logo_Horizontal.jpg"))
-```
-
-```{r, out.width="20%", fig.align="right", eval=FALSE}
-knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
-```
-
-The intent is to offer a range of principled epidemiological and statistical analyses and visualisations of current COVID-19 data which go beyond the now ubiquitous [world maps and cumulative incidence charts](https://coronavirus.jhu.edu/map.html). 
-
-The broad themes for the analyses and visualisations currently available are listed in the menu at the top of this page -- more will be added in due course. For each theme there is an introductory page explaining the motivating ideas and methodology employed for each of the visualisations or analyses for that theme, which are available in the subsequent frames (the series of rectangles at the top of each page). Additional notes or commentary appear on the right of some pages.
-
-The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
-
 ### Introduction
 
 This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Econometrics and Business Statistics Research Group](https://research.monash.edu/en/organisations/econometrics-business-statistics) of [Monash University](https://www.monash.edu/), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
@@ -161,7 +138,7 @@ The broad themes for the analyses and visualisations currently available are lis
 
 The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
 
-### An Australian focus with an international perspective
+#### An Australian focus with an international perspective
 
 This site has been created by researchers at Australian universities, and hence the focus is on the situation in Australia, within the broader international context -- we are, after all, all in this together. However, we hope that some of the analyses and visualisations on this site might be useful elsewhere, and to that end, all the [`R`](https://www.r-project.org) source code used to create this site if freely available -- please see the _Technical details_ tab above for details on software used, and where to find the source code. 
 
@@ -291,6 +268,7 @@ gg_covid_incidence_exceed_limit(covid_since_changepoint,
 ```
 
 ***
+
 In this chart (see discussion in previous frame), we can now discern three distinct groups of countries:
 
 * an upper group of just one, the USA, where the epidemic is still growing rapidly.
@@ -408,7 +386,7 @@ nframes <- as.integer(difftime(max(smooth_covid_changepoint$incidence_date),
 nframes <- max(smooth_covid_changepoint$daynum)
 ```
 
-```{r cum-incidence-incidence, fig.height = 8, fig.width = 12,  warning=FALSE, message=FALSE}
+```{r cum-incidence-incidence, fig.height = 8, fig.width = 12, include=FALSE,  warning=FALSE, message=FALSE}
 
 p <- smooth_covid_changepoint %>%
   mutate(alfa=ifelse(country_region == "Australia", 1, 0.5)) %>%
@@ -439,8 +417,12 @@ ggplot(aes(x = cumulative_cases,
   theme(legend.position="none")
 
 suppressMessages({
-  animate(p, duration=60, height=500, width=800, nframes=nframes*2, detail=5, start_pause=5, end_pause=10, rewind=TRUE)
+  anim_save("log-log-incidence.gif", animation=p, duration=60, height=500, width=800, nframes=nframes*2, detail=5, start_pause=5, end_pause=10, rewind=TRUE)
 })
+```
+
+```{r cum-incidence-incidence-fig, fig.height = 8, fig.width = 12}
+knitr::include_graphics("log-log-incidence.gif")
 ```
 
 ***

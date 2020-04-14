@@ -3,9 +3,9 @@ title: "OzCoViz"
 date: "`r paste('last updated', format(lubridate::now(), '%H:%M, %d %B %Y'))`"
 output:
   flexdashboard::flex_dashboard:
-    orientation: rows
+    orientation: columns
     vertical_layout: fill
-    theme: bootstrap
+    theme: minty
     social: ["menu"]
 ---
 
@@ -114,19 +114,31 @@ if (all(vals[maxpos] > vals[18:26])) {
     
 ```
 
-### Pre-amble
+Column
+-----------------------------------------------------------------------
 
-The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
-
-### Pre-amble {.mobile}
+### Introduction {.mobile}
 
 **We urge you to turn your phone through 90 degrees and view the site in landscape mode.**
 
+This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Econometrics and Business Statistics Research Group](https://research.monash.edu/en/organisations/econometrics-business-statistics) of [Monash University](https://www.monash.edu/), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
+
+```{r, out.width="20%", fig.show='hold', out.extra='style="padding:25px"'}
+knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
+knitr::include_graphics(path=here::here("assets/unsw_logo.png"))
+knitr::include_graphics(path=here::here("assets/monash-logo-mono.png"))
+knitr::include_graphics(path=here::here("assets/Ingham_Institute_Logo_Horizontal.jpg"))
+```
+
+```{r, out.width="20%", fig.align="right", eval=FALSE}
+knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
+```
+
+The intent is to offer a range of principled epidemiological and statistical analyses and visualisations of current COVID-19 data which go beyond the now ubiquitous [world maps and cumulative incidence charts](https://coronavirus.jhu.edu/map.html). 
+
+The broad themes for the analyses and visualisations currently available are listed in the menu at the top of this page -- more will be added in due course. For each theme there is an introductory page explaining the motivating ideas and methodology employed for each of the visualisations or analyses for that theme, which are available in the subsequent frames (the series of rectangles at the top of each page). Additional notes or commentary appear on the right of some pages.
+
 The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
-
-
-Column  {.tabset .tabset-fade}
------------------------------------------------------------------------
 
 ### Introduction
 
@@ -147,54 +159,11 @@ The intent is to offer a range of principled epidemiological and statistical ana
 
 The broad themes for the analyses and visualisations currently available are listed in the menu at the top of this page -- more will be added in due course. For each theme there is an introductory page explaining the motivating ideas and methodology employed for each of the visualisations or analyses for that theme, which are available in the subsequent frames (the series of rectangles at the top of each page). Additional notes or commentary appear on the right of some pages.
 
-#### An Australian focus with an international perspective
+The time-series line in the heading above is derived from current incidence cases of COVID-19 in Australia.
+
+### An Australian focus with an international perspective
 
 This site has been created by researchers at Australian universities, and hence the focus is on the situation in Australia, within the broader international context -- we are, after all, all in this together. However, we hope that some of the analyses and visualisations on this site might be useful elsewhere, and to that end, all the [`R`](https://www.r-project.org) source code used to create this site if freely available -- please see the _Technical details_ tab above for details on software used, and where to find the source code. 
-
-### Contributors
-
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />The content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. If you wish to re-use any of the content, please retain the attribution which appears on each chart or set of charts, or otherwise provide that attribution alongside the content that you re-use.
-
-In turn, we acknowledge [RECON](https://www.repidemicsconsortium.org/) for making their fantastic R packages available,  and the  [European Centre for Disease Control](https://www.ecdc.europa.eu/en) who provide [up to date data](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide) on the COVID19 pandemic.
-
-Project is initiated and led by [Timothy Churches](https://timchurches.github.io/blog/about.html) ([South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) & [UNSW Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au), [UNSW Medicine](https://med.unsw.edu.au), and the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au)). [Nicholas Tierney](https://www.njtierney.com/) (Monash University Econometrics and Business Statistics Research Group) is the co-lead, and has contributed much of the code and contributed to the documenation and commentary. 
-
-We also thank [Stuart Lee](https://stuartlee.org/), Elliot Zhu ([UNSW Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au)), [Dianne Cook](http://dicook.org/), [Miles McBain](https://github.com/MilesMcBain), and [Rob Hyndman](https://robjhyndman.com/) for their helpful comments and contribution of R code (some of which is yet to appear).
-
-Visualisations and analysis code are available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
-
-Source code for this web site is available at [covid-flexdashboard](https://github.com/CBDRH/ozcoviz)
-
-### Technical Details
-
-Data Analysis has been entirely created within the [R programming language](https://cran.r-project.org/) using [Rstudio](https://rstudio.com/).
-
-Code for this web site can be found at [https://github.com/CBDRH/ozcoviz](https://github.com/CBDRH/ozcoviz) and is archived via the [DOI](https://zenodo.org/badge/latestdoi/250268999) shown below:
-
-[![DOI](https://zenodo.org/badge/250268999.svg)](https://zenodo.org/badge/latestdoi/250268999)
-
-This web site also uses code contained in the `covidrecon` package which can be found at [https://github.com/CBDRH/covidrecon](https://github.com/CBDRH/covidrecon) and is archived via the [DOI](https://zenodo.org/badge/latestdoi/248728805) shown below:
-
-[![DOI](https://zenodo.org/badge/248728805.svg)](https://zenodo.org/badge/latestdoi/248728805)
-
-Packages used include:
-
-- [flexdashboard](https://cran.r-project.org/web/packages/flexdashboard)
-- [tidyverse](https://cran.r-project.org/web/packages/tidyverse)
-- [magrittr](https://cran.r-project.org/web/packages/magrittr)
-- [countrycode](https://cran.r-project.org/web/packages/countrycode)
-- [janitor](https://cran.r-project.org/web/packages/janitor)
-- [scales](https://cran.r-project.org/web/packages/scales)
-- [readxl](https://cran.r-project.org/web/packages/readxl)
-- [httr](https://cran.r-project.org/web/packages/httr)
-- [glue](https://cran.r-project.org/web/packages/glue)
-- [EpiEstim](https://cran.r-project.org/web/packages/EpiEstim)
-- [changepoint](https://cran.r-project.org/web/packages/changepoint)
-- [ggrepel](https://cran.r-project.org/web/packages/ggrepel)
-- [memoise](https://cran.r-project.org/web/packages/memoise)
-- [patchwork](https://cran.r-project.org/web/packages/patchwork)
-- [datalegreyar](https://github.com/emitanaka/datalegreyar)
-- [memoise](https://cran.r-project.org/web/packages/)
 
 
 Incidence {.storyboard}
@@ -1002,6 +971,57 @@ Commentary
 
 ---
 
+About this site 
+=======================================================================
 
+Column  {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Contributors
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />The content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. If you wish to re-use any of the content, please retain the attribution which appears on each chart or set of charts, or otherwise provide that attribution alongside the content that you re-use.
+
+In turn, we acknowledge [RECON](https://www.repidemicsconsortium.org/) for making their fantastic R packages available,  and the  [European Centre for Disease Control](https://www.ecdc.europa.eu/en) who provide [up to date data](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide) on the COVID19 pandemic.
+
+Project is initiated and led by [Timothy Churches](https://timchurches.github.io/blog/about.html) ([South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) & [UNSW Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au), [UNSW Medicine](https://med.unsw.edu.au), and the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au)). [Nicholas Tierney](https://www.njtierney.com/) (Monash University Econometrics and Business Statistics Research Group) is the co-lead, and has contributed much of the code and contributed to the documenation and commentary. 
+
+We also thank [Stuart Lee](https://stuartlee.org/), Elliot Zhu ([UNSW Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au)), [Dianne Cook](http://dicook.org/), [Miles McBain](https://github.com/MilesMcBain), and [Rob Hyndman](https://robjhyndman.com/) for their helpful comments and contribution of R code (some of which is yet to appear).
+
+Visualisations and analysis code are available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
+
+Source code for this web site is available at [covid-flexdashboard](https://github.com/CBDRH/ozcoviz)
+
+### Technical Details
+
+Data Analysis has been entirely created within the [R programming language](https://cran.r-project.org/) using [Rstudio](https://rstudio.com/).
+
+Code for this web site can be found at [https://github.com/CBDRH/ozcoviz](https://github.com/CBDRH/ozcoviz) and is archived via the [DOI](https://zenodo.org/badge/latestdoi/250268999) shown below:
+
+[![DOI](https://zenodo.org/badge/250268999.svg)](https://zenodo.org/badge/latestdoi/250268999)
+
+This web site also uses code contained in the `covidrecon` package which can be found at [https://github.com/CBDRH/covidrecon](https://github.com/CBDRH/covidrecon) and is archived via the [DOI](https://zenodo.org/badge/latestdoi/248728805) shown below:
+
+[![DOI](https://zenodo.org/badge/248728805.svg)](https://zenodo.org/badge/latestdoi/248728805)
+
+Packages used include:
+
+- [flexdashboard](https://cran.r-project.org/web/packages/flexdashboard)
+- [tidyverse](https://cran.r-project.org/web/packages/tidyverse)
+- [magrittr](https://cran.r-project.org/web/packages/magrittr)
+- [countrycode](https://cran.r-project.org/web/packages/countrycode)
+- [janitor](https://cran.r-project.org/web/packages/janitor)
+- [scales](https://cran.r-project.org/web/packages/scales)
+- [readxl](https://cran.r-project.org/web/packages/readxl)
+- [httr](https://cran.r-project.org/web/packages/httr)
+- [glue](https://cran.r-project.org/web/packages/glue)
+- [EpiEstim](https://cran.r-project.org/web/packages/EpiEstim)
+- [changepoint](https://cran.r-project.org/web/packages/changepoint)
+- [ggrepel](https://cran.r-project.org/web/packages/ggrepel)
+- [memoise](https://cran.r-project.org/web/packages/memoise)
+- [patchwork](https://cran.r-project.org/web/packages/patchwork)
+- [datalegreyar](https://github.com/emitanaka/datalegreyar)
+- [memoise](https://cran.r-project.org/web/packages/)
+
+---
 
 

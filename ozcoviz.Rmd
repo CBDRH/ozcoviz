@@ -169,6 +169,14 @@ Source code for this web site is available at [covid-flexdashboard](https://gith
 
 Data Analysis has been entirely created within the [R programming language](https://cran.r-project.org/) using [Rstudio](https://rstudio.com/).
 
+Code for this web site can be found at [https://github.com/CBDRH/ozcoviz](https://github.com/CBDRH/ozcoviz) and is archived via the [DOI](https://zenodo.org/badge/latestdoi/250268999) shown below:
+
+[![DOI](https://zenodo.org/badge/250268999.svg)](https://zenodo.org/badge/latestdoi/250268999)
+
+This web site also uses code contained in the `covidrecon` package which can be found at [https://github.com/CBDRH/covidrecon](https://github.com/CBDRH/covidrecon) and is archived via the [DOI](https://zenodo.org/badge/latestdoi/248728805) shown below:
+
+[![DOI](https://zenodo.org/badge/248728805.svg)](https://zenodo.org/badge/latestdoi/248728805)
+
 Packages used include:
 
 - [flexdashboard](https://cran.r-project.org/web/packages/flexdashboard)

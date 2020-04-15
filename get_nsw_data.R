@@ -188,5 +188,69 @@ get_nsw_lhd_incidence <- function(df) {
         mutate(provenance = "data.nsw.gov.au")
 }
 
-
+"
 https://data.nsw.gov.au/data/dataset/97ea2424-abaf-4f3e-a9f2-b5c883f42b6a/resource/2776dbb8-f807-4fb2-b1ed-184a6fc2c8aa/download/covid-19-cases-by-notification-date-location-and-likely-source-of-infection.csv
+"
+
+# returns NSW incidence by source by geography tibble
+get_raw_nsw_source_geo_data <- function() {
+
+    nsw_incidence_by_source_geo_url <- paste0("https://data.nsw.gov.au/data/",
+                                              "dataset/97ea2424-abaf-4f3e-a9f2",
+                                              "-b5c883f42b6a/resource/2776dbb8-",
+                                              "f807-4fb2-b1ed-184a6fc2c8aa/",
+                                              "download/covid-19-cases-by-",
+                                              "notification-date-location-and-",
+                                              "likely-source-of-infection.csv")
+    colspec <- cols(
+                    notification_date = col_date(format = ""),
+                    postcode = col_double(),
+                    likely_source_of_infection = col_character(),
+                    lhd_2010_code = col_character(),
+                    lhd_2010_name = col_character(),
+                    lga_code19 = col_double(),
+                    lga_name19 = col_character())
+
+    read_csv(nsw_incidence_by_source_geo_url, col_types = colspec)
+}
+
+get_nsw_postcode_incidence <- function(df) {
+    df %>%
+        group_by(notification_date, postcode) %>%
+        summarise(n=n()) %>%
+        ungroup() %>%
+        mutate(provenance = "data.nsw.gov.au")
+}
+
+get_nsw_lga_incidence <- function(df) {
+    df %>%
+        group_by(notification_date, lga_name19) %>%
+        summarise(n=n()) %>%
+        ungroup() %>%
+        mutate(provenance = "data.nsw.gov.au")
+}
+
+get_nsw_lhd_incidence <- function(df) {
+    df %>%
+        group_by(notification_date, lhd_2010_name) %>%
+        summarise(n=n()) %>%
+        ungroup() %>%
+        mutate(provenance = "data.nsw.gov.au")
+}
+
+
+raw_nsw_geo_data <- get_raw_nsw_geo_data()
+
+nsw_postcode_incidence <- get_nsw_postcode_incidence(raw_nsw_geo_data)
+
+nsw_source_incidence <- get_nsw_data()
+
+a <- nsw_postcode_incidence %>%
+  group_by(notification_date) %>%
+  summarise(postcode_n = sum(n)) %>%
+  left_join(nsw_source_incidence %>%
+              group_by(notification_date) %>%
+              summarise(source_n = sum(LC + OS + IS + LNC + UIX))
+            )
+
+

@@ -7,6 +7,7 @@ output:
     vertical_layout: fill
     theme: lumen
     social: ["menu"]
+    self_contained: false
 ---
 
 ```{r setup, include=FALSE}
@@ -16,6 +17,7 @@ library(tidyverse)
 library(lubridate)
 library(tsibble)
 library(ggeasy)
+library(googlesheets4)
 library(EpiEstim)
 library(patchwork)
 library(gganimate)
@@ -100,7 +102,7 @@ if (all(vals[maxpos] > vals[18:26])) {
   fig(datafy(values = vals, 
              text = "oz covid 19 visualisations", 
              ignore_space = TRUE), 
-      size=60,
+      size=40,
       symbol = setNames(c(maxpos, 18:25), 
                         c("max", rep("down",8))))
 } else {

@@ -7,7 +7,7 @@ output:
     vertical_layout: fill
     theme: lumen
     social: ["menu"]
-    self_contained: false
+    self_contained: true
 ---
 
 ```{r setup, include=FALSE}

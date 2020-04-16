@@ -211,7 +211,17 @@ get_raw_nsw_source_geo_data <- function() {
                     lga_code19 = col_double(),
                     lga_name19 = col_character())
 
-    read_csv(nsw_incidence_by_source_geo_url, col_types = colspec)
+    read_csv(nsw_incidence_by_source_geo_url, col_types = colspec) %>%
+        rename(source=likely_source_of_infection) %>%
+        mutate(source=case_when(
+          source == paste0("Locally acquired - contact of a ",
+                           "confirmed case and/or in a known cluster") ~ "LC",
+          source == "Locally acquired - contact not identified" ~ "LNC",
+          source == "Overseas" ~ "OS",
+          source == "Interstate" ~ "IS",
+          source == "Under investigation" ~ "UIX",
+          TRUE ~ "OTH"))
+
 }
 
 get_nsw_postcode_incidence <- function(df) {
@@ -238,12 +248,43 @@ get_nsw_lhd_incidence <- function(df) {
         mutate(provenance = "data.nsw.gov.au")
 }
 
+get_nsw_source_postcode_incidence <- function(df) {
+    df %>%
+        group_by(notification_date, source, postcode) %>%
+        summarise(n=n()) %>%
+        ungroup() %>%
+        mutate(provenance = "data.nsw.gov.au")
+}
 
+get_nsw_source_lga_incidence <- function(df) {
+    df %>%
+        group_by(notification_date, source, lga_name19) %>%
+        summarise(n=n()) %>%
+        ungroup() %>%
+        mutate(provenance = "data.nsw.gov.au")
+}
+
+get_nsw_source_lhd_incidence <- function(df) {
+    df %>%
+        group_by(notification_date, source, lhd_2010_name) %>%
+        summarise(n=n()) %>%
+        ungroup() %>%
+        mutate(provenance = "data.nsw.gov.au")
+}
+
+# checks
+
+"""
 raw_nsw_geo_data <- get_raw_nsw_geo_data()
+nsw_lhd_incidence <- get_nsw_lhd_incidence(raw_nsw_geo_data)
+
+nsw_source_incidence <- get_nsw_data()
 
 nsw_postcode_incidence <- get_nsw_postcode_incidence(raw_nsw_geo_data)
 
-nsw_source_incidence <- get_nsw_data()
+raw_nsw_source_geo_data <- get_raw_nsw_source_geo_data()
+
+nsw_source_postcode_incidence <- get_nsw_source_postcode_incidence(raw_nsw_source_geo_data)
 
 a <- nsw_postcode_incidence %>%
   group_by(notification_date) %>%
@@ -251,6 +292,24 @@ a <- nsw_postcode_incidence %>%
   left_join(nsw_source_incidence %>%
               group_by(notification_date) %>%
               summarise(source_n = sum(LC + OS + IS + LNC + UIX))
-            )
+            ) %>%
+  left_join(nsw_source_postcode_incidence %>%
+              group_by(notification_date) %>%
+              summarise(source_postcode_n = sum(n)))
+"""
 
+raw_nsw_geo_data <- get_raw_nsw_geo_data()
+nsw_lhd_incidence <- get_nsw_lhd_incidence(raw_nsw_geo_data)
 
+p <- nsw_lhd_incidence %>%
+  filter(notification_date >= ymd("2020-02-15")) %>%
+  ggplot(aes(x=notification_date, y=lhd_2010_name, fill=n)) +
+    geom_tile() +
+  labs(x="Notification date",
+       y="Local Health District")
+
+rayshader::plot_gg(p, width = 10, height = 10, multicore = TRUE, scale = 250,
+        zoom = 0.7, theta = 10, phi = 30, windowsize = c(1600, 1600))
+Sys.sleep(0.2)
+rayshader::render_movie(filename="COVID-19-LHD.mp4", type="oscillate",
+                        title_text = "COVID-19 incidence by Local Health District")

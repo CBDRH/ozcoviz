@@ -4,7 +4,7 @@ library(here)
 library(lubridate)
 
 render(input =  "ozcoviz.Rmd",
-       output_file = glue("docs/ozcovis-{lubridate::today()}.html"),
+       output_file = glue("ozcovis-{lubridate::today()}.html"),
        output_dir = here::here("local_docs"),
        clean = TRUE,
        params=list(local=TRUE),
@@ -13,8 +13,8 @@ render(input =  "ozcoviz.Rmd",
 # generate the index
 render(input =  "ozcoviz.Rmd",
        output_file = "index.html",
-       output_dir = here::here("docs"),
-       knit_root_dir = here::here("docs"),
+       output_dir = "docs",
+       knit_root_dir = "docs",
        clean = TRUE,
        params=list(local=FALSE),
        output_options=list(self_contained=FALSE))

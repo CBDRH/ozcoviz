@@ -1,13 +1,15 @@
 ---
 title: "OzCoViz"
 date: "`r paste('last updated', format(lubridate::now(), '%H:%M, %d %B %Y'))`"
+params:
+  local: true
 output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
     theme: lumen
     social: ["menu"]
-    self_contained: true
+    self_contained: false
 ---
 
 ```{r setup, include=FALSE}
@@ -28,6 +30,9 @@ library(memoise)
 # library(rayshader)
 
 knitr::opts_chunk$set(cache = FALSE)
+
+local_build <- params$local
+not_local_build <- !params$local
 ```
 
 ```{r center-covid-from-100}
@@ -74,14 +79,18 @@ covid_changepoint <- covid %>%
   filter(date >= change_point_date)
 ```
 
-```{r load-nsw-funcs, cache=FALSE, include = FALSE}
-source("get_nsw_data.R")
-source("get_nishiura_si_sample.R")
-source("plot_nsw_eff_r.R")
-```
-
-```{r prep-nsw-data-and-plots, cache=FALSE, include = FALSE}
-source("nsw_eff_R_data_and_plot_prep.R")
+```{r load-nsw-funcs-and-prep-charts, cache=FALSE, include = FALSE}
+if (local_build) {
+  source("get_nsw_data.R")
+  source("get_nishiura_si_sample.R")
+  source("plot_nsw_eff_r.R")
+  source("nsw_eff_R_data_and_plot_prep.R")
+} else {
+  source("../get_nsw_data.R")
+  source("../get_nishiura_si_sample.R")
+  source("../plot_nsw_eff_r.R")
+  source("../nsw_eff_R_data_and_plot_prep.R")
+}
 ```
 
 Overview 
@@ -123,15 +132,18 @@ Column
 
 This web site is a joint effort of researchers at the [South Western Sydney Clinical School](https://swscs.med.unsw.edu.au) and the [Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au) at the [UNSW Faculty of Medicine](https://med.unsw.edu.au), the [Econometrics and Business Statistics Research Group](https://research.monash.edu/en/organisations/econometrics-business-statistics) of [Monash University](https://www.monash.edu/), and at the [Ingham Institute for Applied Medical Research](https://inghaminstitute.org.au) in Liverpool, Sydney. 
 
-```{r, out.width="20%", fig.show='hold', out.extra='style="padding:25px"'}
-knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
-knitr::include_graphics(path=here::here("assets/unsw_logo.png"))
-knitr::include_graphics(path=here::here("assets/monash-logo-mono.png"))
-knitr::include_graphics(path=here::here("assets/Ingham_Institute_Logo_Horizontal.jpg"))
+```{r, out.width="20%", eval=local_build, fig.show='hold', out.extra='style="padding:25px"'}
+  knitr::include_graphics(path="docs/assets/cbdrh_logo.png")
+  knitr::include_graphics(path="docs/assets/unsw_logo.png")
+  knitr::include_graphics(path="docs/assets/monash-logo-mono.png")
+  knitr::include_graphics(path="docs/assets/Ingham_Institute_Logo_Horizontal.jpg")
 ```
 
-```{r, out.width="20%", fig.align="right", eval=FALSE}
-knitr::include_graphics(path=here::here("assets/cbdrh_logo.png"))
+```{r, out.width="20%", eval=not_local_build, fig.show='hold', out.extra='style="padding:25px"'}
+  knitr::include_graphics(path="assets/cbdrh_logo.png")
+  knitr::include_graphics(path="assets/unsw_logo.png")
+  knitr::include_graphics(path="assets/monash-logo-mono.png")
+  knitr::include_graphics(path="assets/Ingham_Institute_Logo_Horizontal.jpg")
 ```
 
 The intent is to offer a range of principled epidemiological and statistical analyses and visualisations of current COVID-19 data which go beyond the now ubiquitous [world maps and cumulative incidence charts](https://coronavirus.jhu.edu/map.html). 
@@ -419,12 +431,16 @@ ggplot(aes(x = cumulative_cases,
   theme(legend.position="none")
 
 suppressMessages({
-  anim_save("log-log-incidence.gif", animation=p, duration=60, height=500, width=800, nframes=nframes*2, detail=5, start_pause=5, end_pause=10, rewind=TRUE)
+  anim_save("docs/assets/log-log-incidence.gif", animation=p, duration=60, height=500, width=800, nframes=nframes*2, detail=5, start_pause=5, end_pause=10, rewind=TRUE)
 })
 ```
 
 ```{r cum-incidence-incidence-fig, fig.height = 8, fig.width = 12}
-knitr::include_graphics("log-log-incidence.gif")
+if (params$local) {
+  knitr::include_graphics("docs/assets/log-log-incidence.gif")
+} else {
+  knitr::include_graphics("assets/log-log-incidence.gif")
+}  
 ```
 
 ***
@@ -855,7 +871,7 @@ In addition, frames in which the counts of cases in NSW have been inflated by a 
 
 #### Technical details
 
-Please see the paper by [Thompson _et al_.)(https://www.sciencedirect.com/science/article/pii/S1755436519300350) for details of the methods used here.
+Please see the paper by [Thompson _et al_.](https://www.sciencedirect.com/science/article/pii/S1755436519300350) for details of the methods used here.
 
 ### **NSW -- locally-acquired & overseas/interstate-acquired cases treated separately**<br>(cases under investigation excluded)<br>parametric serial interval distribution
 
@@ -954,6 +970,67 @@ C1b / C2b / C3b + plot_layout(heights=c(2,1.5,1.5))
 Commentary
 
 ---
+
+GIFs {.storyboard}
+=======================================================================
+
+### Please stay at home these Easter holidays
+
+```{r stay-at-home}
+if (params$local) {
+  knitr::include_graphics("docs/assets/stay_at_home.gif")
+} else {
+  knitr::include_graphics("assets/stay_at_home.gif")
+}
+```
+
+***
+
+This is a graphic created by Pavel Krivitsky (UNSW Maths and Stats) and Tim Churches (UNSW Medicine) to illustrate the importance of reduced social mixing, particularly over the Easter break in 2020. Further explanation and technical details can be found [here](https://cbdrh.github.io/StayAtHome/).
+
+### Flatten this!
+
+```{r flatten-this, eval=FALSE}
+p <- tibble(age=rep(1:100,100),
+       step=rep(1:100, each=100),
+       coeff=rep(seq(1.0, 0.05,length.out=100),each=100)) %>%
+  mutate(flout = dlnorm(age,3.3,0.35)*coeff) %>%
+  ggplot(aes(x=age, y=flout, fill=step)) +
+  geom_area() +
+  xlim(0,90) +
+  scale_fill_gradient(low = "red", high = "green", na.value = NA) +
+  labs(x="Age in years",
+       y="Number of people ignoring\nsocial distancing rules",
+       title="Flatten this!",
+       caption="Source: observational data from
+                Bondi Junction & Centennial Park,
+                2-6 pm, Sat 18 April 2020.
+                Tim Churches, Sydney, Australia") +
+  theme_minimal() +
+  easy_remove_y_axis(what = c("text")) +
+  easy_remove_legend() +
+  easy_all_text_size(size = 16) +
+  easy_y_axis_title_size(size=22) +
+  easy_x_axis_title_size(size=22) +
+  easy_plot_title_size(size = 30) +
+  easy_plot_caption_size(size=14) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  transition_time(step)
+
+animate(plot=p, width=600, height=600, start_pause=5, end_pause=5, rewind=TRUE)
+```
+
+```{r flatten-this-gif}
+if (params$local) {
+  knitr::include_graphics("docs/assets/flatten-this.gif")
+} else {
+  knitr::include_graphics("assets/flatten-this.gif")
+}
+```
+
+***
+
+A tongue-in-cheek infographic motivated by the observation that, as at 18th April 2020,  many people in particular demographics appear to have assumed that the whole COVID-19 thing is over in Australia, and that it's party time...
 
 About this site 
 =======================================================================

@@ -80,19 +80,21 @@ nsw_effr_split_excl_uix_si_from_sample_under_asc <- estimate_R(nsw_incidence_spl
                             config = si_from_sample_nishiura_config)
 
 # generate plots
+
+ylimits <- c(0.10, 10)
 # A
 plots_A <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si,
                  si_from_sample_obj=nsw_effr_split_excl_uix_si_from_sample,
                  split=TRUE)
 
 A1a <- plots_A$p_R_parametric_si +
-  scale_y_log10(limits=c(0.25, 10)) +
+  scale_y_log10(limits=ylimits) +
   labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas/interstate sources of infection treated separately\n",
                        "Parametric serial interval distribution"))
 
 A1b <- plots_A$p_R_si_from_sample +
-  scale_y_log10(limits=c(0.25, 10)) +
+  scale_y_log10(limits=ylimits) +
   labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas/interstate sources of infection treated separately\n",
                        "Serial interval distribution estimated from data"))
@@ -137,7 +139,7 @@ plots_UA <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si_under_asc,
                  split=TRUE)
 
 UA1a <- plots_UA$p_R_parametric_si +
-  scale_y_log10(limits=c(0.25, 10)) +
+  scale_y_log10(limits=ylimits) +
   labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
                        "and 50% imported case under-ascertainment.\n",
@@ -145,7 +147,7 @@ UA1a <- plots_UA$p_R_parametric_si +
                        "Parametric serial interval distribution"))
 
 UA1b <- plots_UA$p_R_si_from_sample +
-  scale_y_log10(limits=c(0.25, 10)) +
+  scale_y_log10(limits=ylimits) +
   labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Adjusted for 10-fold local case under-ascertainment\n",
                        "and 50% imported case under-ascertainment.\n",
@@ -154,7 +156,7 @@ UA1b <- plots_UA$p_R_si_from_sample +
 
 UA2a <- plots_UA$p_I_loc +
     # ylim(0, plots_A$max_I) +
-    labs(title="COVID-19 incidence in NSW: \\: cases with local sources of infection",
+    labs(title="COVID-19 incidence in NSW: cases with local sources of infection",
           subtitle=paste0("(excluding under investigation)\n",
                           "Adjusted for 10-fold local case under-ascertainment\n",
                           "and 50% imported case under-ascertainment."))
@@ -200,13 +202,13 @@ plots_B <- plot_Ri(parametric_si_obj=nsw_effr_split_incl_uix_para_si,
                  split=TRUE)
 
 B1a <- plots_B$p_R_parametric_si +
-  scale_y_log10(limits=c(0.25, 10)) +
+  scale_y_log10(limits=ylimits) +
   labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas/interstate sources of infection treated separately\n",
                        "Parametric serial interval distribution"))
 
 B1b <- plots_B$p_R_si_from_sample +
-  scale_y_log10(limits=c(0.25, 10)) +
+  scale_y_log10(limits=ylimits) +
   labs(title=expression("COVID-19 incidence in NSW: 7-day sliding window effective reproduction number R"[t]),
        subtitle=paste0("Local & overseas/interstate sources of infection treated separately\n",
                        "Serial interval distribution estimated from data"))

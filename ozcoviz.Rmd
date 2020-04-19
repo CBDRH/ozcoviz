@@ -1032,6 +1032,20 @@ if (params$local) {
 
 A tongue-in-cheek infographic motivated by the observation that, as at 18th April 2020,  many people in particular demographics appear to have assumed that the whole COVID-19 thing is over in Australia, and that it's party time...
 
+### Bhatia/Minute Physics chart
+
+```{r cum-incidence-incidence-fig2, fig.height = 8, fig.width = 12}
+if (params$local) {
+  knitr::include_graphics("docs/assets/log-log-incidence.gif")
+} else {
+  knitr::include_graphics("assets/log-log-incidence.gif")
+}  
+```
+
+***
+
+This plot replicates [a chart](https://aatishb.com/covidtrends/) developed by [Aatish Bhatia](https://aatishb.com) in collaboration with [Minute Physics](https://www.youtube.com/user/minutephysics). The plot shows, for each country, the number of incident (new) cases on the y-axis, on a logarithmic scale, versus the cumulative total of cases on the x-axis, also on a logarithmic scale. When plotted in this way, uncontrolled epidemics with exponential growth take a linear (straight line) trajectory at some angle. As an epidemic is brought under control, the trajectory drops below the straight line, eventually falling vertically if the epidemic has been completely extinguished. 
+
 About this site 
 =======================================================================
 

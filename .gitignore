@@ -6,7 +6,5 @@ index_cache
 .covid_cache
 .nishiura_si_dist/
 */*_cache/
-local_docs/*_files
 local_docs/*.html
 .DS_Store
-*.gif

@@ -286,7 +286,7 @@ gg_covid_incidence_exceed_limit(covid_since_changepoint,
 
 In this chart (see discussion in previous frame), we can now discern three distinct groups of countries:
 
-* an upper group of just one, the USA, where the epidemic has grown rapidly until reaching a plateau around 35 days since commencement.
+* an upper group of just one, the USA, where the epidemic is still growing rapidly.
 * a middle group comprising the UK and European countries
 * a lower group, which includes Australia , New Zealand, South Korea, Taiwan, mainland China, Japan and Singapore, which all have their local COVID-19 epidemics under control (but definitely not eliminated). Note however that Japan and Singapore are now exiting that lower group and heading upwards.
 

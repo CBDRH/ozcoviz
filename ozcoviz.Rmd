@@ -26,6 +26,7 @@ library(gganimate)
 # devtools::install_github('emitanaka/datalegreyar')
 library(datalegreyar)
 library(memoise)
+library(scales)
 # remotes::install_github("tylermorganwall/rayshader")
 # library(rayshader)
 
@@ -168,7 +169,7 @@ Incidence is the epidemiological term for the number of cases of a disease meeti
 * **Probable cases**
 * **Confirmed (by laboratory test) cases**
 
-All of the data reported here are for **confirmed cases**, with a few exceptions -- China included cases diagnosed via lung CT scan for a few days in February, 20020, but we have adjusted the data for those days as far as possible to remove that anomaly.
+All of the data reported here are for **confirmed cases**, with a few exceptions -- China included cases diagnosed via lung CT scan for a few days in February, 2020, but we have adjusted the data for those days as far as possible to remove that anomaly.
 
 The data are drawn from the [European CDC](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide), which has collected data from various governing agencies around the world. There are some small discrepancies between these data and those given by the Australian government, and indeed other national governments, due to timing issues relating to when cases are tabulated each day, and so on. However, we believe the the European CDC to be the best source of automatically downloadable, machine-readable data there is right now.
 
@@ -287,7 +288,7 @@ In this chart (see discussion in previous frame), we can now discern three disti
 
 * an upper group of just one, the USA, where the epidemic is still growing rapidly.
 * a middle group comprising the UK and European countries
-* a lower group, which includes Australia , New Zealand, South Korea, Taiwan, mainland China, Japan and Singapore, which all have their local COVID-19 epidemics under control (but definitely not eradicated). Note however that Japan and Singapore are now exiting that lower group and heading upwards.
+* a lower group, which includes Australia , New Zealand, South Korea, Taiwan, mainland China, Japan and Singapore, which all have their local COVID-19 epidemics under control (but definitely not eliminated). Note however that Japan and Singapore are now exiting that lower group and heading upwards.
 
 ```{r, eval=FALSE}
 ### Semi-log **cumulative incidence and cumulative deaths** for selected countries -- the _Grattan Institute_ chart with deaths added
@@ -476,7 +477,8 @@ gg_cases <-  ggplot(covid_since_changepoint_w_total,
        y = "Incident cases",
        caption = glue::glue("Tim Churches (UNSW) & Nick Tierney (Monash)
                   Data source: European CDC up to {format(max(covid_since_changepoint_w_total$date),'%d %b %Y')}")) +
-  scale_x_datetime(date_labels = "%d %b")
+  scale_x_datetime(date_labels = "%d %b") +
+  scale_y_continuous(label = comma)
 
 gg_cases + 
     facet_wrap(~reorder(country_region, -total_cases),
@@ -512,7 +514,7 @@ This provides important context: the number of cases in the USA currently domina
 gg_cases + 
     facet_wrap(~reorder(country_region, -total_cases), 
                scales="free") +
-    scale_y_log10() +
+    scale_y_log10(label = comma) +
   labs(subtitle = "Arranged from highest to smallest cumulative incidence\nwith logarithmic y-axis scales, different for each country")
 ```
 
@@ -546,7 +548,7 @@ As such, $R_{0}$ is useful in the early stages of an epidemic, but as soon as (e
 
 **If $R_{t}$ is greater than 1.0**
 
-- Each infected person spreads the disease, on average, to more than one other person during the course of their illness. Each of those spread the disease to more than one additional people, and so on. It is easy to see that this results in a growing number of new infections each day, and that growth rate itself also grows -- the so-called exponential growth of an epidemic (at least in its early stages). If $R_{0}$ initially, or $R_{t}$, later, is only just greater than 1.0, then the disease spreads only slowly, but if the _reproduction number_ is well above 1.0, say, 2.0 or more, then rapid spread results. Initial estimates  
+- Each infected person spreads the disease, on average, to more than one other person during the course of their illness. Each of those spread the disease to more than one additional people, and so on. It is easy to see that this results in a growing number of new infections each day, and that growth rate itself also grows -- the so-called exponential growth of an epidemic (at least in its early stages). If $R_{0}$ initially, or $R_{t}$, later, is only just greater than 1.0, then the disease spreads only slowly, but if the _reproduction number_ is well above 1.0, say, 2.0 or more, then rapid spread results.
 
 **If $R_{t}$ is less than 1.0**
 
@@ -559,7 +561,7 @@ We estimate the _effective reproduction number_ $R_{t}$ using a statistical mode
 
 1. The methods we use here estimate the **instantaneous** effective reproduction number, which is is the average number of secondary cases that each infected individual would infect if the conditions remained as they were at time _t_. In that respect, it is analogous to _current life expectancy_ (which is the one usually calculated), which is the length of time someone is expected to live if the age- and sex-specific death rates as they currently are persist, unchnaged, into the future.
 
-1. The _reproduction number_ is an estimate of the spread of an infection in a specific, local population, and thus we should really only use counts of incident (new) infections which are the result of **local** spread -- that is, we should not include cases which were acquired elsewhere, such as overseas or interstate, when estimating it. Doing so will bias our estimates of $R_{t}$ upwards. In fact, the estimation method used here can make proper use of **both** incident counts of imported cases and separate counts of locally-acquired cases. Unfortunately, very few jurisdictions have released data which enable that distinction, between imported and locally-acquired cases, to be made, and so we just use total incidence for the estimates shown in this section. However, incident counts of cases, split into imported and locally-acquired counts, **is** available from NSW Health, and we report on those, much better data in the next section (see menu at top of page).
+1. The _reproduction number_ is an estimate of the spread of an infection in a specific, local population, and thus we should really only use counts of incident (new) infections which are the result of **local** spread -- that is, we should not include cases which were acquired elsewhere, such as overseas or interstate, when estimating it. Doing so will bias our estimates of $R_{t}$ upwards while (in rough terms) the incidence of such cases is increasing, and downwards when they slow or stop. In fact, the estimation method used here can make proper use of **both** incident counts of imported cases and separate counts of locally-acquired cases. Unfortunately, very few jurisdictions have released data which enable that distinction, between imported and locally-acquired cases, to be made, and so we just use total incidence for the estimates shown in this section. However, incident counts of cases, split into imported and locally-acquired counts, **is** available from NSW Health, and we report on those, much better data in the next section (see menu at top of page).
 
 1. We use a seven-day trailing sliding window of incidence case counts to calculate the current $R_{t}$ estimate. Thus, for each date, the estimate is based on the count of incident cases on that date and for the six days prior to that. This is done to smooth the estimates and provide greater precision for each estimate.
 
@@ -620,7 +622,7 @@ The $R_{t}$ estimates for each country indicate that most countries are bringing
 
 ***
 
-This is the same information presented as in the previous graphic, but with each country split into its own graph. This allows us to see the trajectories of effective R for each country more easily 
+This is the same information presented as in the previous graphic, but with each country split into its own graph. This allows us to see the trajectories of effective R for each country more easily. 
 
 Most countries are decreasing, but we notice that Japan and Singapore are rising, due to recent recrudescent outbreaks.
 
@@ -668,7 +670,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-By contrast, Japan appears to have managed the early stages of the epidemic well, but failed, due to lack of enabling legislation, to implement strict social distancing nationwide, may have contributed to the "escape" of the epidemic around 23rd March. Since then, Japan has struggled to regain control, although emergencies have now been declared in many Japanese prefectures, which should result in better containment of spread.
+By contrast, Japan appears to have managed the early stages of the epidemic well, but failed, due to lack of enabling legislation, to implement strict social distancing nationwide. This may have contributed to the "escape" of the epidemic around 23rd March. Since then, Japan has struggled to regain control, although emergencies have now been declared in many Japanese prefectures, which should result in better containment of spread.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -712,7 +714,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Canada clearly suffers from sharing a long border with the US, but nonetheless appears to almost have its COVID-19 epidemic under control, or at least, in a decay phase.
+Canada clearly suffers from sharing a long border with the US, but nonetheless appears to almost have its COVID-19 epidemic under control, or at least, close to a decay phase.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -726,7 +728,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that theor epidemics are now clearly in decay.
+Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that their epidemics are now clearly in decay.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -740,7 +742,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that theor epidemics are now clearly in decay.
+Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that their epidemics are now clearly in decay.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -754,7 +756,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that theor epidemics are now clearly in decay.
+Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that their epidemics are now clearly in decay.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -768,7 +770,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that theor epidemics are now clearly in decay.
+Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that their epidemics are now clearly in decay.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -782,7 +784,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Norway adopted rigorous social distancing measures alon with its European neighbours, with good results, avoiding any major overwhelming of its health system. It is interesting to contrast the Norwegian approach to that of its fellow Scandinavian country, Sweden, which has taken, at least until recently, an "allow herd immunity to develop" approach.
+Norway adopted rigorous social distancing measures along with its European neighbours, with good results, avoiding any major overwhelming of its health system. It is interesting to contrast the Norwegian approach to that of its fellow Scandinavian country, Sweden, which has taken, at least until recently, an "allow herd immunity to develop" approach.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -796,7 +798,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Singapore was initially a model of how to contain the virus, and has used advanced smartphone technologies to ensure rigorous case isolation and contact quarantining. Nonetheless, the eppidemic escaped control, and they have been struggling to bring it back under control since. The reasons for this late failure of control are important to study, as they hold valuable lessons for other countries (such study is beyond the scope of this web site, for now).
+Singapore was initially a model of how to contain the virus, and has used advanced smartphone technologies to ensure rigorous case isolation and contact quarantining. Nonetheless, the eppidemic escaped control, and they have been struggling to bring it back under control since. The reasons for this late failure of control are important to study, as they hold valuable lessons for other countries (such study is beyond the scope of this website, for now).
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -850,7 +852,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-The world is aghast at the US reponse to COVID-19 and the results thereof. But they do appear to be slowly reducing transmission, mainly due to extremely rigorous social disatncing measures in New York city and state, which is an epicentre of the epidemic.
+The world is aghast at the US reponse to COVID-19 and the results thereof. But they do appear to be slowly reducing transmission, mainly due to extremely rigorous social distancing measures in New York city and state, which is a centre of the epidemic.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -859,9 +861,9 @@ $R_{t}$ for NSW {.storyboard}
 
 ### Explanation
 
-The charts of the time-varying effective reproduction number $R_{t}$ for New South Wales COVID-19 incidence data are similar to the analyses presented in the previous section, with the important distinction that incidence cases have been able to be divided into locally-acquired cases and cases where the infection was acquired elsewhere (overseas or interstate). This premits much more accurate estimated of the true $R_{t}$.
+The charts of the time-varying effective reproduction number $R_{t}$ for New South Wales COVID-19 incidence data are similar to the analyses presented in the previous section, with the important distinction that incidence cases have been able to be divided into locally-acquired cases and cases where the infection was acquired elsewhere (overseas or interstate). This permits much more accurate estimation of the true $R_{t}$.
 
-This has been enable by the publication of more detailed data by NSW Health, available on the [NSW government open data web site](https://data.nsw.gov.au/nsw-covid-19-data), and updated daily, in conjunction with data derived by counting pixels in NSW Health charts to obtain earlier data (luckily the charts were high-resolution and thus the data extracted this way is very accurate).
+This has been enabled by the publication of more detailed data by NSW Health, available on the [NSW government open data web site](https://data.nsw.gov.au/nsw-covid-19-data), and updated daily, in conjunction with data derived by counting pixels in NSW Health charts to obtain earlier data (luckily the charts were high-resolution and thus the data extracted this way is very accurate).
 
 In each of the frames in this section, estimates of the NSW effective reproduction number are shown, based on either a parametric _serial interval_ distribution, or a _serial  interval_ distribution derived from data collated by [Nishiura _et al._](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -918,7 +920,7 @@ UA1b / UA2b / UA3b / UA4b + plot_layout(heights=c(2,1,1,1))
 
 In these plots, the counts of incident cases with presumed local sources of infection have been inflated by a factor of 10, and the counts of cases with presumed overseas or interstate sources of infection inflated by a factor of 1.5. This mimics ten-fold under-ascertainment of locally-transmitted cases, and 50% under-ascertainment of inbound cases.
 
-In fact, under-ascertainment has little effect on the effective reproduction number, which is driven by the number of cases each case infects, not the total number of cases or infectious individuals.
+In fact, so long as the rate of under-ascertainment does not change much over time, it has little effect on the effective reproduction number, which is driven by the number of cases each case infects, not the total number of cases or infectious individuals.
 
 ---
 
@@ -1062,9 +1064,9 @@ Project is initiated and led by [Timothy Churches](https://timchurches.github.io
 
 We also thank [Stuart Lee](https://stuartlee.org/), Elliot Zhu ([UNSW Centre for Big Data Research in Health](https://cbdrh.med.unsw.edu.au)), [Dianne Cook](http://dicook.org/), [Miles McBain](https://github.com/MilesMcBain), and [Rob Hyndman](https://robjhyndman.com/) for their helpful comments and contribution of R code (some of which is yet to appear).
 
-Visualisations and analysis code are available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon)
+Visualisations and analysis code are available in the [`covidrecon` package](https://github.com/CBDRH/covidrecon).
 
-Source code for this web site is available at [covid-flexdashboard](https://github.com/CBDRH/ozcoviz)
+Source code for this web site is available at [covid-flexdashboard](https://github.com/CBDRH/ozcoviz).
 
 ### Technical Details
 

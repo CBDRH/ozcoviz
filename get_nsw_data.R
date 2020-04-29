@@ -188,10 +188,6 @@ get_nsw_lhd_incidence <- function(df) {
         mutate(provenance = "data.nsw.gov.au")
 }
 
-"
-https://data.nsw.gov.au/data/dataset/97ea2424-abaf-4f3e-a9f2-b5c883f42b6a/resource/2776dbb8-f807-4fb2-b1ed-184a6fc2c8aa/download/covid-19-cases-by-notification-date-location-and-likely-source-of-infection.csv
-"
-
 # returns NSW incidence by source by geography tibble
 get_raw_nsw_source_geo_data <- function() {
 
@@ -285,7 +281,7 @@ get_nsw_source_postcode_incidence <- function(df) {
 
 get_nsw_source_lga_incidence <- function(df) {
     df %>%
-        group_by(notification_date, source, lga_name19) %>%
+        group_by(notification_date, source, lga_code19, lga_name19) %>%
         summarise(n=n()) %>%
         ungroup() %>%
         mutate(provenance = "data.nsw.gov.au")
@@ -330,17 +326,6 @@ a <- nsw_postcode_incidence %>%
 raw_nsw_geo_data <- get_raw_nsw_geo_data()
 nsw_lhd_incidence <- get_nsw_lhd_incidence(raw_nsw_geo_data)
 
-'
-p <- nsw_lhd_incidence %>%
-  filter(notification_date >= ymd("2020-02-15")) %>%
-  ggplot(aes(x=notification_date, y=lhd_2010_name, fill=n)) +
-    geom_tile() +
-  labs(x="Notification date",
-       y="Local Health District")
+raw_nsw_source_geo_data <- get_raw_nsw_source_geo_data()
 
-rayshader::plot_gg(p, width = 10, height = 10, multicore = TRUE, scale = 250,
-        zoom = 0.7, theta = 10, phi = 30, windowsize = c(1600, 1600))
-Sys.sleep(0.2)
-rayshader::render_movie(filename="COVID-19-LHD.mp4", type="oscillate",
-                        title_text = "COVID-19 incidence by Local Health District")
-'
+nsw_source_lga_incidence <- get_nsw_source_lga_incidence(raw_nsw_source_geo_data)

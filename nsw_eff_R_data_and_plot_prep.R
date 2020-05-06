@@ -81,7 +81,7 @@ nsw_effr_split_excl_uix_si_from_sample_under_asc <- estimate_R(nsw_incidence_spl
 
 # generate plots
 
-ylimits <- c(0.10, 10)
+ylimits <- c(0.01, 10)
 # A
 plots_A <- plot_Ri(parametric_si_obj=nsw_effr_split_excl_uix_para_si,
                  si_from_sample_obj=nsw_effr_split_excl_uix_si_from_sample,

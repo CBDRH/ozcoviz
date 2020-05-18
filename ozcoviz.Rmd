@@ -51,7 +51,8 @@ selected_countries <- c(
                         "Japan",
                         "Sweden",
                         "Spain",
-                        "France",
+                        # "Indonesia",
+                        "Brazil",
                         # "Norway",
                         "Russia",
                         "Taiwan")
@@ -108,6 +109,13 @@ vals <- covid %>%
           top_n(26, wt = row_number()) %>%
           pull(cases)
 
+fig(datafy(values = vals, 
+             text = "oz covid 19 visualisations", 
+             ignore_space = TRUE), 
+      size=40)
+```
+
+```{r old-code, eval=FALSE, echo=FALSE}
 maxpos <- which(vals == max(vals))
 if (all(vals[maxpos] > vals[18:26])) {
   fig(datafy(values = vals, 
@@ -124,7 +132,6 @@ if (all(vals[maxpos] > vals[18:26])) {
       symbol = setNames(c(maxpos, 18:54), 
                         c("max", rep("up",8))))
 }
-    
 ```
 
 Column

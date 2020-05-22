@@ -112,7 +112,7 @@ vals <- covid %>%
 fig(datafy(values = vals, 
              text = "oz covid 19 visualisations", 
              ignore_space = TRUE), 
-      size=40)
+      size=60)
 ```
 
 ```{r old-code, eval=FALSE, echo=FALSE}
@@ -294,7 +294,7 @@ gg_covid_incidence_exceed_limit(covid_since_changepoint,
 
 In this chart (see discussion in previous frame), we can now discern three distinct groups of countries:
 
-* an upper group of just one, the USA, where the epidemic is still growing rapidly.
+* an upper group of the USA, Russia and Brazil, where the epidemic is still growing rapidly.
 * a middle group comprising the UK and European countries
 * a lower group, which includes Australia , New Zealand, South Korea, Taiwan, mainland China, Japan and Singapore, which all have their local COVID-19 epidemics under control (but definitely not eliminated). Note however that Japan and Singapore are now exiting that lower group and heading upwards.
 
@@ -609,11 +609,7 @@ covid_instant_r <- covid_changepoint %>%
 
 ***
 
-The $R_{t}$ estimates for each country indicate that most countries are bringing the spread of the virus under control. Currently only Singapore and Japan (amongst these selected countries) are experiencing rising $R_{t}$. Note that there again appears to be three clusters with respect to the current $R_{t}$: 
-
-* one group comprising Australia, New Zealand, South Korea, Taiwan and Norway, in which the $R_{t}$ is well below 1.0 and thus the local epidemics are in fast decay. 
-* a middle group comprising China, the European and North American countries for which the $R_{t}$ is around 1.0
-* a third group comprising Singapore and Japan in which the $R_{t}$ is much higher, and rising.
+The $R_{t}$ estimates for each country indicate that most countries are bringing the spread of the virus under control or have brought it under control, with the exception Brazil.
 
 ### $R_{t}$ for selected countries as facetted plots
 
@@ -678,7 +674,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-By contrast, Japan appears to have managed the early stages of the epidemic well, but failed, due to lack of enabling legislation, to implement strict social distancing nationwide. This may have contributed to the "escape" of the epidemic around 23rd March. Since then, Japan has struggled to regain control, although emergencies have now been declared in many Japanese prefectures, which should result in better containment of spread.
+By contrast, Japan appears to have managed the early stages of the epidemic well, but failed, due to lack of enabling legislation, to implement strict social distancing nationwide. This may have contributed to the "escape" of the epidemic around 23rd March. Since then, Japan has struggled to regain control, although emergencies have now been declared in many Japanese prefectures, which have resulted in better containment of spread.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -692,7 +688,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-South Korea is a model of how to fight COVID-19. After initial, very fast growing outbreaks centred in Daegu, the South Korean authorities moved swiftly to implement very efficient and thorough case and contact tracing with rigorous isolation of cases and quarantining of contacts, plus extensive social distancing measures in affected areas. Within a month they had brought the epidemic under control, and have been able to keep it in decay since 9th March, to the point that eradication or almost complete supression appears achievable.
+South Korea is a model of how to fight COVID-19. After initial, very fast growing outbreaks centred in Daegu, the South Korean authorities moved swiftly to implement very efficient and thorough case and contact tracing with rigorous isolation of cases and quarantining of contacts, plus extensive social distancing measures in affected areas. Within a month they had brought the epidemic under control, and have been able to keep it in decay since 9th March, with the exception of a short-lived outbreak in nightclubs in Seoul as soon as social disatncing was relaxed, now contained.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -706,7 +702,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-China stunned the world, or at least it stunned epidemiologists and public health practitioners everywhere, when it closed the city of Wuhan, and then the entire province of Hubei, on 24th January. The result was that within a few weeks the epidemic was in decay, and that decay has accelerated due to door-to-door case-and-contract tracing efforts. 
+China stunned the world, or at least it stunned epidemiologists and public health practitioners everywhere, when it closed the city of Wuhan, and then the entire province of Hubei, on 24th January. The result was that within a few weeks the epidemic was in decay, and that decay has accelerated due to door-to-door case-and-contract tracing efforts. Small outbreaks around teh country, including in Wuhan, have all been rapidly contained.
 
 As COVID-19 epidemics began to become apparent in other countries in March, resulting in the repatriation of Chines nationals, there was an increase in the $R_{t}$ estimated here, because it is not possible to separate those _imported_ cases from ongoing local transmission. Thus, at least some of the "bump" in the estimated $R_{t}$ around 23rd March is an artefact of inadequate data.
 
@@ -722,7 +718,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-Canada clearly suffers from sharing a long border with the US, but nonetheless appears to almost have its COVID-19 epidemic under control, or at least, close to a decay phase.
+Canada clearly suffers from sharing a long border with the US, but nonetheless appears to almost have its COVID-19 epidemic under control.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -754,17 +750,17 @@ Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, 
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
-### France: $R_{t}$ and incidence
+### Brazil: $R_{t}$ and incidence
 
-```{r this-is-france}
+```{r this-is-brazil}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
                                        covid,
-                                       "France")
+                                       "Brazil")
 ```
 
 ***
 
-Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, but all appear to have now contained spread to the point that their epidemics are now clearly in decay.
+Incidence in Brazil lagged that in most northen hemisphere countries, but now appears to be in the exponential growth phase, with growth slowing only slowly.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -782,17 +778,17 @@ Italy, Spain, France and Germany have all suffered large epidemics of COVID-19, 
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
-### Norway: $R_{t}$ and incidence
+### Russia: $R_{t}$ and incidence
 
-```{r this-is-norway}
+```{r this-is-russia}
 gg_effective_repro_incidence_patchwork(covid_instant_r,
                                        covid,
-                                       "Norway")
+                                       "Russia")
 ```
 
 ***
 
-Norway adopted rigorous social distancing measures along with its European neighbours, with good results, avoiding any major overwhelming of its health system. It is interesting to contrast the Norwegian approach to that of its fellow Scandinavian country, Sweden, which has taken, at least until recently, an "allow herd immunity to develop" approach.
+Incidence in Russia was initially very low, possibly due to limited testing, but has since accelerted dramatically, particularly in Moscow, although social distancing and rigorous lock-down is now having an effect and incidence now appears to be declining. 
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -834,6 +830,8 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 Please see this [SMH article](https://www.smh.com.au/world/asia/population-the-same-as-australia-s-but-a-fraction-of-the-coronavirus-cases-20200412-p54j67.html) for background on Taiwan's comprehensive and model approach, one which other island states (including Australia, New Zealand and, effectively, South Korea) are seeking to emulate, or should be.
 
+because Taiwan has so few cases, the estimates of $R_{t}$ are quite unstable, but it is has been a major success story.
+
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
 ### United Kingdom: $R_{t}$ and incidence
@@ -846,7 +844,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-The UK was initially following a "herd immunity" approach, like Sweden, but changed strategy in response to a [modelling report](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-9-impact-of-npis-on-covid-19/) released on 16 March by Imperial College London, perhaps just in time to avoid a complete catastrophe. However, Britain is still struggling to bring the epidemic under control, and it still appears to be in a growth phase.
+The UK was initially following a "herd immunity" approach, like Sweden, but changed strategy in response to a [modelling report](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-9-impact-of-npis-on-covid-19/) released on 16 March by Imperial College London, perhaps just in time to avoid a complete catastrophe. However, Britain is still struggling to bring the epidemic under control, and it appears to have only recently left the growth phase.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
@@ -860,7 +858,7 @@ gg_effective_repro_incidence_patchwork(covid_instant_r,
 
 ***
 
-The world is aghast at the US reponse to COVID-19 and the results thereof. But they do appear to be slowly reducing transmission, mainly due to extremely rigorous social distancing measures in New York city and state, which is a centre of the epidemic.
+The world is aghast at the US reponse to COVID-19 and the results thereof. But they do appear to be slowly reducing transmission, mainly due to extremely rigorous social distancing measures in New York city and state, which is a centre of the epidemic. The recent opening of the economy in the US may yet have detrimental effects on control of COVID-19.
 
 The estimates here use samples from a posterior distribution of _serial intervals_ estimated from the data given by [Nishiura _et al_.](https://www.ijidonline.com/article/S1201-9712(20)30119-3/pdf) using the method of [Thompson _et al_](https://doi.org/10.1016/j.epidem.2019.100356).
 
